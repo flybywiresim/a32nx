@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "noEmit": true,
+    "typeRoots": ["../../typings"],
+  },
+  "filesGlob": [
+    "../../typings/**/*.d.ts"
+  ]
+}

@@ -1,3 +1,21 @@
+/*
+ * A32NX
+ * Copyright (C) 2020 FlyByWire Simulations and its contributors
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 class NavSystem extends BaseInstrument {
     constructor() {
         super(...arguments);
@@ -48,8 +66,8 @@ class NavSystem extends BaseInstrument {
         this.contextualMenuElements = this.getChildById("ContextualMenuElements");
         this.menuSlider = this.getChildById("SliderMenu");
         this.menuSliderCursor = this.getChildById("SliderMenuCursor");
-        this.currFlightPlanManager = new FlightPlanManager(this);
-        this.currFlightPlan = new FlightPlan(this, this.currFlightPlanManager);
+        this.currFlightPlanManager = new fpm.FlightPlanManager(this);
+        this.currFlightPlan = new fpm.ManagedFlightPlan();
     }
     disconnectedCallback() {
         super.disconnectedCallback();
