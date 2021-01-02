@@ -404,14 +404,17 @@ class FMCMainDisplay extends BaseAirliners {
                 }
             }
         }
+
         //Default Asobo logic
         // Switches from any phase to APPR if less than 40 distance(?) from DEST
-        if (this.flightPlanManager.getActiveWaypoint() === this.flightPlanManager.getDestination()) {
+        const destination = this.flightPlanManager.getDestination();
+
+        if (destination && this.flightPlanManager.getActiveWaypoint() === destination) {
             if (SimVar.GetSimVarValue("L:FLIGHTPLAN_USE_DECEL_WAYPOINT", "number") !== 1) {
                 const lat = SimVar.GetSimVarValue("PLANE LATITUDE", "degree latitude");
                 const long = SimVar.GetSimVarValue("PLANE LONGITUDE", "degree longitude");
                 const planeLla = new LatLongAlt(lat, long);
-                const dist = Avionics.Utils.computeGreatCircleDistance(planeLla, this.flightPlanManager.getDestination().infos.coordinates);
+                const dist = Avionics.Utils.computeGreatCircleDistance(planeLla, destination.infos.coordinates);
                 if (dist < 40 && this.currentFlightPhase !== FlightPhase.FLIGHT_PHASE_GOAROUND) {
                     this.connectIls();
                     this.flightPlanManager.activateApproach();
