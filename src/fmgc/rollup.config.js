@@ -47,7 +47,7 @@ module.exports = {
     ],
     external: ['MSFS', 'WorkingTitle'],
     output: {
-        file: `${__dirname}/../../A32NX/html_ui/JS/flightPlan/bundle.js`,
+        file: `${__dirname}/../../A32NX/html_ui/JS/fmgc/bundle.js`,
         globals: {
             WorkingTitle: 'WorkingTitle',
         },

@@ -101,6 +101,10 @@ export class ManagedFlightPlan {
     return waypoints;
   }
 
+  public get segments(): FlightPlanSegment[] {
+      return this._segments;
+  }
+
   /** The length of the flight plan. */
   public get length(): number {
     const lastSeg = this._segments[this._segments.length - 1];

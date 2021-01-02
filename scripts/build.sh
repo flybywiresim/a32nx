@@ -33,8 +33,8 @@ build_instruments() {
     npm run build:instruments
 }
 
-build_flight_plan_manager() {
-    npm run build:flightplan
+build_fmgc() {
+    npm run build:fmgc
 }
 
 build_behavior() {
@@ -90,7 +90,7 @@ build_metadata() {
 if [ -z "$1" ]; then
     set -x
     build_instruments
-    build_flight_plan_manager
+    build_fmgc
     build_behavior
     build_model
     build_systems

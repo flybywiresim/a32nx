@@ -8,7 +8,7 @@
     "build:instruments": "rollup -c src/instruments/rollup.config.js",
     "serve:efb": "cd src/instruments/src/EFB/ && rollup -wc ./rollup.development.config.js",
     "build:fbw": "cd src/fbw && ./build.sh",
-    "build:flightplan": "rollup -c src/flightplan/rollup.config.js",
+    "build:fmgc": "rollup -c src/fmgc/rollup.config.js",
     "postinstall": "husky install"
   },
   "lint-staged": {
