@@ -123,18 +123,7 @@ class CDUFlightPlanPage {
                 waypointsWithDiscontinuities.push({ wp: mcdu.flightPlanManager.getWaypoint(i), fpIndex: i });
             }
         }
-        const approachWaypoints = mcdu.flightPlanManager.getApproachWaypoints();
         const destination = waypointsWithDiscontinuities.pop();
-        for (let i = 0; i < approachWaypoints.length; i++) {
-            const prev = waypointsWithDiscontinuities[waypointsWithDiscontinuities.length - 1];
-            const wp = approachWaypoints[i];
-            if (!prev || (prev.wp && prev.wp.ident != wp.ident)) {
-                waypointsWithDiscontinuities.push({
-                    wp: wp,
-                    fpIndex: -42
-                });
-            }
-        }
         if (destination) {
             waypointsWithDiscontinuities.push(destination);
         }
@@ -449,7 +438,7 @@ class CDUFlightPlanPage {
             }
         }
         mcdu.currentFlightPlanWaypointIndex = offset + first;
-        const wpCount = mcdu.flightPlanManager.getWaypointsCount() + approachWaypoints.length;
+        const wpCount = mcdu.flightPlanManager.getWaypointsCount();
         if (wpCount > 0) {
             while (mcdu.currentFlightPlanWaypointIndex < 0) {
                 mcdu.currentFlightPlanWaypointIndex += wpCount;
