@@ -1443,7 +1443,7 @@ export class FlightPlanManager {
     }
     window.localStorage.setItem(FlightPlanManager.FlightPlanKey, fpJson);
     SimVar.SetSimVarValue(FlightPlanManager.FlightPlanVersionKey, 'number', ++this._currentFlightPlanVersion);
-    FlightPlanAsoboSync.SaveToGame(this);
+    // FlightPlanAsoboSync.SaveToGame(this);
   }
 
   public pauseSync(): void {
