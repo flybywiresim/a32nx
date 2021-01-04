@@ -36,7 +36,7 @@ class CDUAvailableArrivalsPage {
                 selectedApproachCellColor = mcdu.flightPlanManager.getCurrentFlightPlanIndex() === 1 ? "yellow" : "green";
                 const selectedApproachTransition = selectedApproach.transitions[mcdu.flightPlanManager.getApproachTransitionIndex()];
                 if (selectedApproachTransition) {
-                    selectedViasCell = selectedApproachTransition.waypoints[0].infos.icao.substr(7);
+                    selectedViasCell = selectedApproachTransition.name;
                 } else {
                     selectedViasCell = "NONE";
                 }

@@ -80,13 +80,30 @@ declare class WayPointInfo {
     CopyBaseInfosFrom(_WP: WayPoint);
 }
 
+interface RawApproachTransitionData {
+    legs: {}[],
+    name: string,
+    __Type: "JS_ApproachTransition",
+}
+
+interface RawApproachData {
+    finalLegs: {}[],
+    missedLegs: {}[],
+    icaos: any[],
+    index: number,
+    name: string,
+    runway: string,
+    transitions: RawApproachTransitionData[],
+    __Type: "JS_Approach",
+}
+
 declare class AirportInfo extends WayPointInfo {
     constructor(_instrument: BaseInstrument);
 
     frequencies: any[];
     namedFrequencies: any[];
     departures: any[];
-    approaches: any[];
+    approaches: RawApproachData[];
     arrivals: any[];
     runways: any[];
     oneWayRunways: OneWayRunway[];
