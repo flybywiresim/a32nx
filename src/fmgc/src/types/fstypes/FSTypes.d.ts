@@ -91,7 +91,7 @@ interface RawApproachData {
     missedLegs: {}[],
     icaos: any[],
     index: number,
-    name: string,
+    name?: string,
     runway: string,
     transitions: RawApproachTransitionData[],
     __Type: "JS_Approach",
