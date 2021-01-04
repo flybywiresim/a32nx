@@ -362,7 +362,7 @@ export class LegsProcedure {
     const course = leg.course + GeoMath.getMagvar(prevLeg.infos.coordinates.lat, prevLeg.infos.coordinates.long);
     const coordinates = GeoMath.relativeBearingDistanceToCoords(course, distanceInNM, prevLeg.infos.coordinates);
 
-    return this.buildWaypoint(`(${Math.trunc(altitudeFeet)})`, coordinates, prevLeg.infos.magneticVariation);
+    return this.buildWaypoint(FixNamingScheme.headingUntilAltitude(altitudeFeet), coordinates, prevLeg.infos.magneticVariation);
   }
 
   /**
@@ -375,7 +375,7 @@ export class LegsProcedure {
     const course = leg.course + GeoMath.getMagvar(prevLeg.infos.coordinates.lat, prevLeg.infos.coordinates.long);
     const coordinates = GeoMath.relativeBearingDistanceToCoords(course, 5, prevLeg.infos.coordinates);
 
-    const waypoint = this.buildWaypoint('(VECT)', coordinates);
+    const waypoint = this.buildWaypoint(FixNamingScheme.vector(), coordinates);
     waypoint.isVectors = true;
     waypoint.endsInDiscontinuity = true;
 

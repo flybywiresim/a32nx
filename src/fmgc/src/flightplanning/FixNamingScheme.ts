@@ -28,10 +28,32 @@ export class FixNamingScheme {
   private static alphabet: String[] = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O',
     'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
 
+    /**
+     * Generates a fix name for a vector type fix.
+     *
+     * @returns The generated fix name.
+     */
+    public static vector(): string {
+        return 'MANUAL';
+    }
+
+    /**
+     * Generates a fix name for a heading to altitude type fix.
+     *
+     * @param altitudeFeet The altitude that will be flown to.
+     *
+     * @returns The generated fix name.
+     */
+    public static headingUntilAltitude(altitudeFeet: number): string {
+        return Math.round(altitudeFeet).toString();
+    }
+
   /**
    * Generates a fix name for a course to distance type fix.
+   *
    * @param course The course that will be flown.
    * @param distance The distance along the course or from the reference fix.
+   *
    * @returns The generated fix name.
    */
   public static courseToDistance(course: number, distance: number): string {
@@ -43,7 +65,9 @@ export class FixNamingScheme {
 
   /**
    * Generates a fix name for a course turn to intercept type fix.
+   *
    * @param course The course that will be turned to.
+   *
    * @returns The generated fix name.
    */
   public static courseToIntercept(course: number): string {
