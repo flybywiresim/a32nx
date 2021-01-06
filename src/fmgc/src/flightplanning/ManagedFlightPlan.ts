@@ -641,12 +641,27 @@ export class ManagedFlightPlan {
             selectedRunwayOutput = "0" + runway.designation;
           }
         }
+
         const runwayWaypoint = procedure.buildWaypoint(`RW${selectedRunwayOutput}`, runway.endCoordinates);
         runwayWaypoint.legAltitudeDescription = 1;
         runwayWaypoint.legAltitude1 = (runway.elevation * 3.28084) + 50;
         runwayWaypoint.isRunway = true;
 
         this.addWaypoint(runwayWaypoint, undefined, segment.type);
+
+        // Reference : AMM - 22-71-00 PB001, Page 4
+        if (departureIndex === -1 && transitionIndex === -1) {
+          const altitudeFeet = (runway.elevation * 3.2808399) + 1500;
+          const distanceInNM = altitudeFeet / 500.0;
+
+          const course = runway.direction + GeoMath.getMagvar(runwayWaypoint.infos.coordinates.lat, runwayWaypoint.infos.coordinates.long);
+          const coordinates = GeoMath.relativeBearingDistanceToCoords(course, distanceInNM, runwayWaypoint.infos.coordinates);
+
+          const faLeg = procedure.buildWaypoint(`${Math.round(altitudeFeet)}`, coordinates);
+          faLeg.endsInDiscontinuity = true;
+
+          this.addWaypoint(faLeg, undefined, segment.type)
+        }
 
         procedure = new LegsProcedure(legs, runwayWaypoint, this._parentInstrument);
       }
