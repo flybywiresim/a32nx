@@ -30,6 +30,7 @@ declare class WayPoint {
     icao: string;
     ident: string;
     endsInDiscontinuity?: boolean;
+    discontinuityCanBeCleared?: boolean;
     isVectors?: boolean;
     isRunway?: boolean;
     infos: WayPointInfo;

@@ -445,6 +445,14 @@ class CDUFlightPlanPage {
                                 if (i + 1 < maxLineCount) {
                                     rows[2 * fixRow + 2] = [""];
                                     rows[2 * fixRow + 3] = ["---F-PLN DISCONTINUITY--"];
+
+                                    mcdu.onLeftInput[fixRow + 1] = (value) => {
+                                        if (value === FMCMainDisplay.clrValue && waypoint.discontinuityCanBeCleared) {
+                                            waypoint.endsInDiscontinuity = false;
+
+                                            CDUFlightPlanPage.ShowPage(mcdu, offset);
+                                        }
+                                    };
                                 }
                                 discontinuityCount++;
                             }

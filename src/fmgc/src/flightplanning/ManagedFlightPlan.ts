@@ -427,6 +427,7 @@ export class ManagedFlightPlan {
       legAltitude2: waypoint.legAltitude2,
       isVectors: waypoint.isVectors,
       endsInDiscontinuity: waypoint.endsInDiscontinuity,
+      discontinuityCanBeCleared: waypoint.discontinuityCanBeCleared,
       distanceInFP: waypoint.distanceInFP,
       cumulativeDistanceInFP: waypoint.cumulativeDistanceInFP,
       isRunway: waypoint.isRunway,

@@ -378,6 +378,7 @@ export class LegsProcedure {
     const waypoint = this.buildWaypoint(FixNamingScheme.vector(), coordinates);
     waypoint.isVectors = true;
     waypoint.endsInDiscontinuity = true;
+    waypoint.discontinuityCanBeCleared = false;
 
     return waypoint;
   }
