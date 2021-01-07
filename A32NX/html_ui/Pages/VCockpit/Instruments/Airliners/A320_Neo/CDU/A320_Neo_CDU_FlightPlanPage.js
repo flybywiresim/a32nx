@@ -188,7 +188,7 @@ class CDUFlightPlanPage {
             }
             depAlt = depAlt.padStart(6,"\xa0");
             if (index === 0 && first === 0) {
-                rows[2 * fixRow + 1] = [originIdentCell + "[color]" + color, "{white}---{end}{" + depAltColor + "}/" + depAlt + "{end}" + "[s-text]", originTimeCell + "{sp}{sp}[color]" + color + "[s-text]"];
+                rows[2 * fixRow + 1] = [`${originIdentCell}[color]${color}`, `{white}---{end}{${depAltColor}}/${depAlt}{end}[s-text]`, `${originTimeCell}[color]{sp}{sp}${color}[s-text]`];
                 mcdu.leftInputDelay[fixRow] = () => {
                     return mcdu.getDelaySwitchPage();
                 };
@@ -304,7 +304,24 @@ class CDUFlightPlanPage {
                         if (index === 0 && offset == 0) {
                             showFrom = true;
                         }
-                        rows[2 * fixRow] = [(index === 0 && offset == 0) ? "\xa0FROM" : airwayName, ((index >= activeIndex || waypoint.ident === "(DECEL)") && i != 0 ? dstnc : i === 0 ? "SPD/ALT\xa0\xa0\xa0" : ""), i === 0 ? (isFlying ? "\xa0UTC{sp}" : "TIME{sp}{sp}") : ""];
+
+                        // Setup fix header
+
+                        let fixAnnotation;
+                        if (index === 0 && offset === 0) {
+                            fixAnnotation = "\xa0FROM";
+                        } else if (mcdu.flightPlanManager.getDepartureWaypoints().some(f => f.ident === waypoint.ident)) {
+                            fixAnnotation = mcdu.flightPlanManager.getDeparture().name;
+                        } else if (mcdu.flightPlanManager.getArrivalWaypoints().some(f => f.ident === waypoint.ident)) {
+                            fixAnnotation = mcdu.flightPlanManager.getArrival().name;
+                        } else {
+                            fixAnnotation = airwayName;
+                        }
+
+                        // Render fix header
+
+                        rows[2 * fixRow] = [`{sp}${fixAnnotation}`, ((index >= activeIndex || waypoint.ident === "(DECEL)") && i != 0 ? dstnc : i === 0 ? "SPD/ALT\xa0\xa0\xa0" : ""), i === 0 ? (isFlying ? "\xa0UTC{sp}" : "TIME{sp}{sp}") : ""];
+
                         let speedConstraint = "---";
                         if (waypoint.speedConstraint > 10) {
                             speedConstraint = "{magenta}*{end}" + waypoint.speedConstraint.toFixed(0);
@@ -418,9 +435,11 @@ class CDUFlightPlanPage {
                             if (altitudeConstraint === "-----") {
                                 altColor = "white";
                             }
-                            rows[2 * fixRow + 1] = [waypoint.ident + "[color]" + color,
-                                "{" + spdColor + "}" + speedConstraint + "{end}" + "{" + altColor + "}/" + altPrefix + altitudeConstraint + "{end}[s-text]",
-                                timeCell + "{sp}{sp}[color]" + color];
+                            rows[2 * fixRow + 1] = [
+                                `${waypoint.ident}[color]${color}`,
+                                `{${spdColor}}${speedConstraint}{end}{${altColor}}/${altPrefix}${altitudeConstraint}{end}[s-text]`,
+                                `${timeCell}{sp}{sp}[color]white`
+                            ];
 
                             if (waypoint.endsInDiscontinuity) {
                                 if (i + 1 < maxLineCount) {
