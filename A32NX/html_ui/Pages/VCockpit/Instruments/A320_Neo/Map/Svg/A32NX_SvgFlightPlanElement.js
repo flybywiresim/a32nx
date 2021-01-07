@@ -122,7 +122,7 @@ class SvgFlightPlanElement extends SvgMapElement {
             }
             const approach = this.source.getApproach();
             const last = (this.source.isActiveApproach() && approach) ? 0 : this.source.getLastIndexBeforeApproach();
-            for (let i = first; i < (last != -1 ? last : l - (doLastLeg ? 0 : 1)); i++) {
+            for (let i = first; i < (last !== -1 ? last + 1 : l - (doLastLeg ? 0 : 1)); i++) {
                 const waypoint = this.source.getWaypoint(i, this.flightPlanIndex);
                 if (waypoint) {
                     const wpPoints = [];
