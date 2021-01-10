@@ -161,6 +161,10 @@ export class FlightPlanManager {
     return 0;
   }
 
+  public isCurrentFlightPlanTemporary(): boolean {
+      return this.getCurrentFlightPlanIndex() === 1;
+  }
+
   /**
    * Gets the index of the currently active flight plan.
    */

@@ -16,6 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+const MAX_FIX_ROW = 5;
+
 class CDUFlightPlanPage {
     static ShowPage(mcdu, offset = 0) {
         mcdu.flightPlanManager.updateWaypointDistances(false /* approach */);
@@ -67,7 +69,7 @@ class CDUFlightPlanPage {
         }
         let rows = [[""], [""], [""], [""], [""], [""], [""], [""], [""], [""], [""], [""],];
         let rowsCount = 5;
-        if (fpm.getCurrentFlightPlanIndex() === 1) {
+        if (fpm.isCurrentFlightPlanTemporary()) {
             rowsCount = 5;
             rows[10] = [" ", " "];
             rows[11] = ["{ERASE[color]amber", "INSERT*[color]amber"];
@@ -472,11 +474,14 @@ class CDUFlightPlanPage {
                             }
                         }
 
-                        mcdu.leftInputDelay[fixRow] = () => mcdu.getDelaySwitchPage();
+                        // Only set LSK if ERASE doesn't need to be displayed OR this is not the last fix row
+                        if (fixRow !== MAX_FIX_ROW || !fpm.isCurrentFlightPlanTemporary()) {
+                            mcdu.leftInputDelay[fixRow] = () => mcdu.getDelaySwitchPage();
 
-                        mcdu.onLeftInput[fixRow] = () => {
-                            CDULateralRevisionPage.ShowPage(mcdu, fpm.getDestination(), fpm.getWaypointsCount() - 1);
-                        };
+                            mcdu.onLeftInput[fixRow] = () => {
+                                CDULateralRevisionPage.ShowPage(mcdu, fpm.getDestination(), fpm.getWaypointsCount() - 1);
+                            };
+                        }
                     }
                 }
             }
