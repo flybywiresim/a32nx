@@ -92,165 +92,99 @@ class SvgFlightPlanElement extends SvgMapElement {
         this.setAsDashed(this._isDashed, true);
         return container;
     }
+
     updateDraw(map) {
         this._highlightedLegIndex = SimVar.GetSimVarValue("L:MAP_FLIGHTPLAN_HIGHLIT_WAYPOINT", "number");
         this.points = [];
-        const transitionPoints = [];
-        let lastLat = NaN;
-        let lastLong = NaN;
-        let departureRunwayCase;
-        let activeWaypointIndex = -1;
-        if (this.source) {
-            const l = this.source.getWaypointsCount();
-            activeWaypointIndex = this.source.getActiveWaypointIndex(false, true);
-            let doLastLeg = true;
-            if (this.source.getApproach() && this.source.getApproach().transitions.length > 0) {
-                doLastLeg = false;
-            }
-            if (!this.source.getIsDirectTo() && this.source.getWaypoint(0, this.flightPlanIndex)) {
-                const departureWaypoint = this.source.getWaypoint(0, this.flightPlanIndex);
-                if (departureWaypoint.infos instanceof AirportInfo) {
-                    departureRunwayCase = this.source.getDepartureRunway();
-                }
-            }
-            let pIndex = 0;
-            let first = 0;
-            if (this.source.getIsDirectTo()) {
-                first = 1;
-            } else if (this.hideReachedWaypoints) {
-                first = Math.max(0, activeWaypointIndex - 1);
-            }
-            const approach = this.source.getApproach();
-            const last = (this.source.isActiveApproach() && approach) ? 0 : this.source.getLastIndexBeforeApproach();
-            for (let i = first; i < (last !== -1 ? last + 1 : l - (doLastLeg ? 0 : 1)); i++) {
-                const waypoint = this.source.getWaypoint(i, this.flightPlanIndex);
-                if (waypoint) {
-                    const wpPoints = [];
-                    if (waypoint.transitionLLas) {
-                        for (let j = 0; j < waypoint.transitionLLas.length; j++) {
-                            wpPoints.push(waypoint.transitionLLas[i].toLatLong());
-                        }
-                    }
-                    wpPoints.push(waypoint.infos.coordinates.toLatLong());
-                    for (let j = 0; j < wpPoints.length; j++) {
-                        this.latLong = wpPoints[j];
-                        if (departureRunwayCase && i === 0) {
-                            this.latLong.lat = departureRunwayCase.beginningCoordinates.lat;
-                            this.latLong.long = departureRunwayCase.beginningCoordinates.long;
-                        }
-                        if (this.latLong.lat !== lastLat && this.latLong.long !== lastLong) {
-                            const deltaLong = Math.abs(lastLong - this.latLong.long);
-                            if (deltaLong > 2) {
-                                const lastX = Math.cos(lastLat / 180 * Math.PI) * Math.cos(lastLong / 180 * Math.PI);
-                                const lastY = Math.cos(lastLat / 180 * Math.PI) * Math.sin(lastLong / 180 * Math.PI);
-                                const lastZ = Math.sin(lastLat / 180 * Math.PI);
-                                const X = Math.cos(this.latLong.lat / 180 * Math.PI) * Math.cos(this.latLong.long / 180 * Math.PI);
-                                const Y = Math.cos(this.latLong.lat / 180 * Math.PI) * Math.sin(this.latLong.long / 180 * Math.PI);
-                                const Z = Math.sin(this.latLong.lat / 180 * Math.PI);
-                                const stepCount = Math.floor(deltaLong / 2);
-                                for (let k = 0; k < stepCount; k++) {
-                                    const d = (k + 1) / (stepCount + 1);
-                                    const x = lastX * (1 - d) + X * d;
-                                    const y = lastY * (1 - d) + Y * d;
-                                    const z = lastZ * (1 - d) + Z * d;
-                                    const long = Math.atan2(y, x) / Math.PI * 180;
-                                    const hyp = Math.sqrt(x * x + y * y);
-                                    const lat = Math.atan2(z, hyp) / Math.PI * 180;
-                                    if (this.points[pIndex]) {
-                                        map.coordinatesToXYToRef(new LatLong(lat, long), this.points[pIndex]);
-                                    } else {
-                                        const p = map.coordinatesToXY(new LatLong(lat, long));
-                                        p.refWP = waypoint;
-                                        p.refWPIndex = i;
-                                        this.points.push(p);
-                                    }
-                                    pIndex++;
-                                }
-                            }
-                            lastLat = this.latLong.lat;
-                            lastLong = this.latLong.long;
-                            if (this.points[pIndex]) {
-                                map.coordinatesToXYToRef(this.latLong, this.points[pIndex]);
-                                if (i === 0) {
-                                    if (this.points[0].x === this._lastP0X && this.points[0].y === this._lastP0Y) {
-                                        this._forceFullRedraw++;
-                                        if (this._forceFullRedraw < 60) {
-                                            return;
-                                        }
-                                        this._forceFullRedraw = 0;
-                                    }
-                                    this._lastP0X = this.points[0].x;
-                                    this._lastP0Y = this.points[0].y;
-                                }
+
+        this.source.getContinuousSegments()
+            .map(segment => this.makePathFromWaypoints(segment, map))
+            .forEach((path, index) => this.makeOrUpdatePathElement(path, index, map));
+    }
+
+    /**
+     * @param waypoints {WayPoint[]}
+     * @param map
+     */
+    makePathFromWaypoints(waypoints, map) {
+        let points = [];
+        let pIndex = 0;
+
+        for (const waypoint of waypoints) {
+            const pathPoints = [];
+            pathPoints.push(waypoint.infos.coordinates.toLatLong());
+
+            for (let j = 0; j < pathPoints.length; j++) {
+                this.latLong = pathPoints[j];
+
+                let lastLat = NaN;
+                let lastLong = NaN;
+                if (this.latLong.lat !== lastLat && this.latLong.long !== lastLong) {
+                    const deltaLong = Math.abs(lastLong - this.latLong.long);
+
+                    if (deltaLong > 2) {
+                        const lastX = Math.cos(lastLat / 180 * Math.PI) * Math.cos(lastLong / 180 * Math.PI);
+                        const lastY = Math.cos(lastLat / 180 * Math.PI) * Math.sin(lastLong / 180 * Math.PI);
+                        const lastZ = Math.sin(lastLat / 180 * Math.PI);
+                        const X = Math.cos(this.latLong.lat / 180 * Math.PI) * Math.cos(this.latLong.long / 180 * Math.PI);
+                        const Y = Math.cos(this.latLong.lat / 180 * Math.PI) * Math.sin(this.latLong.long / 180 * Math.PI);
+                        const Z = Math.sin(this.latLong.lat / 180 * Math.PI);
+                        const stepCount = Math.floor(deltaLong / 2);
+                        for (let k = 0; k < stepCount; k++) {
+                            const d = (k + 1) / (stepCount + 1);
+                            const x = lastX * (1 - d) + X * d;
+                            const y = lastY * (1 - d) + Y * d;
+                            const z = lastZ * (1 - d) + Z * d;
+                            const long = Math.atan2(y, x) / Math.PI * 180;
+                            const hyp = Math.sqrt(x * x + y * y);
+                            const lat = Math.atan2(z, hyp) / Math.PI * 180;
+                            if (points[pIndex]) {
+                                map.coordinatesToXYToRef(new LatLong(lat, long), points[pIndex]);
                             } else {
-                                const p = map.coordinatesToXY(this.latLong);
+                                const p = map.coordinatesToXY(new LatLong(lat, long));
                                 p.refWP = waypoint;
                                 p.refWPIndex = i;
-                                this.points.push(p);
+                                points.push(p);
                             }
                             pIndex++;
                         }
                     }
-                    if (i === 0) {
-                        if (departureRunwayCase) {
-                            this.latLong.lat = departureRunwayCase.endCoordinates.lat;
-                            this.latLong.long = departureRunwayCase.endCoordinates.long;
-                            if (this.points[pIndex]) {
-                                map.coordinatesToXYToRef(this.latLong, this.points[pIndex]);
-                            } else {
-                                const p = map.coordinatesToXY(this.latLong);
-                                p.refWP = waypoint;
-                                p.refWPIndex = 0;
-                                this.points.push(p);
+
+                    lastLat = this.latLong.lat;
+                    lastLong = this.latLong.long;
+
+                    if (points[pIndex]) {
+                        map.coordinatesToXYToRef(this.latLong, points[pIndex]);
+                        if (i === 0) {
+                            if (points[0].x === this._lastP0X && points[0].y === this._lastP0Y) {
+                                this._forceFullRedraw++;
+                                if (this._forceFullRedraw < 60) {
+                                    return;
+                                }
+                                this._forceFullRedraw = 0;
                             }
-                            pIndex++;
+                            this._lastP0X = points[0].x;
+                            this._lastP0Y = points[0].y;
                         }
+                    } else {
+                        const p = map.coordinatesToXY(this.latLong);
+                        p.refWP = waypoint;
+                        p.refWPIndex = i;
+                        points.push(p);
                     }
-                }
-            }
-            if (approach) {
-                /** @type WayPoint[] */
-                const waypoints = this.source.getApproachWaypoints();
-                for (let i = 0; i < waypoints.length; i++) {
-                    const wpPoints = [];
-                    if (waypoints[i].transitionLLas) {
-                        for (let j = 0; j < waypoints[i].transitionLLas.length; j++) {
-                            wpPoints.push(waypoints[i].transitionLLas[j]);
-                        }
-                    }
-                    wpPoints.push(waypoints[i].infos.coordinates);
-                    for (let j = 0; j < wpPoints.length; j++) {
-                        if (this.points[pIndex]) {
-                            map.coordinatesToXYToRef(wpPoints[j], this.points[pIndex]);
-                            this.points[pIndex].refWP = waypoints[i];
-                            this.points[pIndex].refWPIndex = last + i;
-                        } else {
-                            const p = map.coordinatesToXY(wpPoints[j]);
-                            p.refWP = waypoints[i];
-                            p.refWPIndex = last + i;
-                            this.points.push(p);
-                        }
-                        pIndex++;
-                    }
+                    pIndex++;
                 }
             }
         }
-        const logWPIndex = false;
-        if (logWPIndex) {
-            let indexes = "";
-            this.points.forEach(p => {
-                indexes += p.refWPIndex + " ";
-            });
-            console.log(indexes);
-        }
+
         for (let bevels = 0; bevels < 4; bevels++) {
             const bevelAmount = map.NMToPixels(0.5) / (bevels + 1);
-            if (this.points.length > 2) {
-                const beveledPoints = [this.points[0]];
-                for (let i = 1; i < this.points.length - 1; i++) {
-                    const pPrev = this.points[i - 1];
-                    const p = this.points[i];
-                    const pNext = this.points[i + 1];
+            if (points.length > 2) {
+                const beveledPoints = [points[0]];
+                for (let i = 1; i < points.length - 1; i++) {
+                    const pPrev = points[i - 1];
+                    const p = points[i];
+                    const pNext = points[i + 1];
                     if ((pPrev.x == p.x && pPrev.y == p.y) || (pNext.x == p.x && pNext.y == p.y)) {
                         beveledPoints.push(p);
                         continue;
@@ -272,30 +206,24 @@ class SvgFlightPlanElement extends SvgMapElement {
                         x: p.x + xPrev * b,
                         y: p.y + yPrev * b,
                         refWP: refWP,
-                        refWPIndex: refWPIndex
+                        refWPIndex: refWPIndex,
                     }, {
                         x: p.x + xNext * b,
                         y: p.y + yNext * b,
                         refWP: refWP,
-                        refWPIndex: refWPIndex
+                        refWPIndex: refWPIndex,
                     });
                 }
-                beveledPoints.push(this.points[this.points.length - 1]);
-                this.points = beveledPoints;
-                if (logWPIndex) {
-                    let indexes = "";
-                    this.points.forEach(p => {
-                        indexes += p.refWPIndex + " ";
-                    });
-                    console.log(indexes);
-                }
+                beveledPoints.push(points[points.length - 1]);
+                points = beveledPoints;
             }
         }
-        if (this.points.length > 0) {
-            let prevRefWPIndex = this.points[this.points.length - 1].refWPIndex;
-            let prevRefWP = this.points[this.points.length - 1].refWP;
-            for (let p = this.points.length - 2; p > 0; p--) {
-                const point = this.points[p];
+
+        if (points.length > 0) {
+            let prevRefWPIndex = points[points.length - 1].refWPIndex;
+            let prevRefWP = points[points.length - 1].refWP;
+            for (let p = points.length - 2; p > 0; p--) {
+                const point = points[p];
                 if (point.refWPIndex > prevRefWPIndex) {
                     point.refWPIndex = prevRefWPIndex;
                     point.refWP = prevRefWP;
@@ -304,105 +232,72 @@ class SvgFlightPlanElement extends SvgMapElement {
                 prevRefWP = point.refWP;
             }
         }
-        let path = "";
-        let activePath = "";
-        let transitionPath = "";
-        let showActiveLeg = false;
-        let prevIsHighlit;
-        for (let i = 0; i < this.points.length - 1; i++) {
-            const p1 = this.points[i];
-            let p2 = this.points[i + 1];
+
+        let pathString = "";
+
+        for (let i = 0; i < points.length - 1; i++) {
+            const p1 = points[i];
+            let p2 = points[i + 1];
             if (!p2) {
-                p2 = this.points[i + 2];
+                p2 = points[i + 2];
             }
             if (p1 && p2) {
                 const p1x = fastToFixed(p1.x, 0);
                 const p1y = fastToFixed(p1.y, 0);
                 const p2x = fastToFixed(p2.x, 0);
                 const p2y = fastToFixed(p2.y, 0);
+
                 if (p1x !== p2x || p1y !== p2y) {
-                    let isHighlit = false;
-                    if (!this._isDashed && this.highlightActiveLeg) {
-                        if (this.source.getActiveWaypoint(false, true)) {
-                            if (p2.refWP.ident === this.source.getActiveWaypoint(false, true).ident) {
-                                isHighlit = true;
-                            }
-                        } else if (activeWaypointIndex <= 1 && p2.refWPIndex <= activeWaypointIndex) {
-                            isHighlit = true;
-                        }
-                    }
-                    if (isHighlit) {
-                        showActiveLeg = true;
-                        if (i === 0 || prevIsHighlit != isHighlit) {
-                            activePath += "M" + p1x + " " + p1y + " L" + p2x + " " + p2y + " ";
-                        } else {
-                            activePath += "L" + p2x + " " + p2y + " ";
-                        }
+                    if (i === 0) {
+                        pathString += "M" + p1x + " " + p1y + " L" + p2x + " " + p2y + " ";
                     } else {
-                        if (i === 0 || prevIsHighlit != isHighlit) {
-                            path += "M" + p1x + " " + p1y + " L" + p2x + " " + p2y + " ";
+                        if (p2.refWP.endsInDiscontinuity) {
+                            pathString += `M ${p2x} ${p2y} `;
                         } else {
-                            path += "L" + p2x + " " + p2y + " ";
+                            pathString += "L" + p2x + " " + p2y + " ";
                         }
                     }
-                    prevIsHighlit = isHighlit;
                 }
             }
         }
-        for (let i = 0; i < transitionPoints.length - 1; i++) {
-            const p1 = transitionPoints[i];
-            let p2 = transitionPoints[i + 1];
-            if (!p2) {
-                p2 = transitionPoints[i + 2];
-            }
-            if (p1 && p2 && map.isSegmentInFrame(p1, p2)) {
-                const p1x = fastToFixed(p1.x, 0);
-                const p1y = fastToFixed(p1.y, 0);
-                const p2x = fastToFixed(p2.x, 0);
-                const p2y = fastToFixed(p2.y, 0);
-                if (p1x !== p2x || p1y !== p2y) {
-                    transitionPath += "M" + p1x + " " + p1y + " L" + p2x + " " + p2y + " ";
-                }
-            }
-        }
-        if (showActiveLeg) {
-            if (this._colorActive) {
-                this._colorActive.setAttribute("display", "visible");
-            }
-            if (this._outlineActive) {
-                this._outlineActive.setAttribute("display", "visible");
-            }
-            if (this._outlineActive) {
-                this._outlineActive.setAttribute("d", activePath);
-            }
-            if (this._colorActive) {
-                this._colorActive.setAttribute("d", activePath);
+
+        return pathString;
+    }
+
+    /**
+     * @param pathString {string}
+     * @param index {number}
+     * @param map
+     */
+    makeOrUpdatePathElement(pathString, index, map) {
+        const existingElement = document.getElementById(`flight-plan-segment-${index}`);
+
+        if (existingElement) {
+            if (existingElement.getAttribute("d") !== pathString) {
+                existingElement.setAttribute("d", pathString);
             }
         } else {
-            if (this._colorActive) {
-                this._colorActive.setAttribute("display", "none");
+            const newElement = document.createElementNS(Avionics.SVG.NS, "path");
+
+            newElement.setAttribute("id", `flight-plan-segment-${index}`);
+            newElement.setAttribute("d", pathString);
+
+            if (this.flightPlanIndex === 1) {
+                newElement.setAttribute("stroke", "yellow");
+            } else {
+                newElement.setAttribute("stroke", map.config.flightPlanNonActiveLegColor);
             }
-            if (this._outlineActive) {
-                this._outlineActive.setAttribute("display", "none");
-            }
-        }
-        if (this._colorPath.getAttribute("d") !== path) {
-            if (this._colorPath) {
-                this._colorPath.setAttribute("d", path);
-            }
-            if (this._outlinePath) {
-                this._outlinePath.setAttribute("d", path);
-            }
-        }
-        if (this._transitionPath.getAttribute("d") !== transitionPath) {
-            if (this._transitionPath) {
-                this._transitionPath.setAttribute("d", transitionPath);
-            }
-            if (this._transitionOutlinePath) {
-                this._transitionOutlinePath.setAttribute("d", transitionPath);
-            }
+
+            newElement.setAttribute("fill", "none");
+
+            newElement.setAttribute("stroke-width", fastToFixed(map.config.flightPlanNonActiveLegWidth, 0));
+            newElement.setAttribute("stroke-linecap", "square");
+
+            document.getElementById(this.id(map))
+                .appendChild(newElement);
         }
     }
+
     setAsDashed(_val, _force = false) {
         if (_force || (_val != this._isDashed)) {
             this._isDashed = _val;

@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import { FlightPlanSegment, SegmentType } from './FlightPlanSegment';
+import { SegmentType, FlightPlanSegment } from './FlightPlanSegment';
 import { LegsProcedure } from './LegsProcedure';
 import { RawDataMapper } from './RawDataMapper';
 import { GPS } from './GPS';
@@ -587,6 +587,11 @@ export class ManagedFlightPlan {
     const selectedOriginRunwayIndex = this.procedureDetails.originRunwayIndex;
 
     const airportInfo = origin.infos as AirportInfo;
+
+    // Set origin fix coordinates to runway beginning coordinates
+    if (selectedOriginRunwayIndex !== -1) {
+        origin.infos.coordinates = airportInfo.oneWayRunways[selectedOriginRunwayIndex].beginningCoordinates;
+    }
 
     if (departureIndex !== -1 && runwayIndex !== -1) {
       const runwayTransition = airportInfo.departures[departureIndex].runwayTransitions[runwayIndex];

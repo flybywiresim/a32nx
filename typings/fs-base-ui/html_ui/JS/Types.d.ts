@@ -49,6 +49,8 @@ declare global {
     }
 
     class LatLongAlt {
+        constructor();
+        constructor(latitude: Latitude, longitude: Longitude);
         constructor(latitude: Latitude, longitude: Longitude, alt: Feet);
         constructor(data: { lat: Latitude, long: Longitude, alt: Feet });
 

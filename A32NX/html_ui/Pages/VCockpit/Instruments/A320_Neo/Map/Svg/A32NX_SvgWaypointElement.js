@@ -61,6 +61,8 @@ class SvgWaypointElement extends SvgMapElement {
                 while (this._icaoNoSpace.indexOf(" ") != -1) {
                     this._icaoNoSpace = this._icaoNoSpace.replace(" ", "_");
                 }
+            } else {
+                this._icaoNoSpace = this.ident;
             }
         }
         if (this._icaoNoSpace) {

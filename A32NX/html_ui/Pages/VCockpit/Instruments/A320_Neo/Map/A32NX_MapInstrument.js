@@ -1,6 +1,6 @@
 /*
  * A32NX
- * Copyright (C) 2020 FlyByWire Simulations and its contributors
+ * Copyright (C) 2020-2021 FlyByWire Simulations and its contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -123,14 +123,6 @@ class MapInstrument extends ISvgMapRootElement {
     }
     get flightPlanManager() {
         return this._flightPlanManager;
-    }
-    getHideReachedWaypoints() {
-        return this.flightPlanElement ? this.flightPlanElement.hideReachedWaypoints : false;
-    }
-    setHideReachedWaypoints(b) {
-        if (this.flightPlanElement) {
-            this.flightPlanElement.hideReachedWaypoints = b;
-        }
     }
     get dummyObstacles() {
         if (!this._dummyObstacles) {
@@ -450,25 +442,8 @@ class MapInstrument extends ISvgMapRootElement {
         this.bIsInit = true;
     }
     onFlightStart() {
-        this.checkBushTripCase();
     }
     onBingMapReady() {
-        this.checkBushTripCase();
-    }
-    checkBushTripCase() {
-        if (this.eBingMode !== EBingMode.HORIZON) {
-            Coherent.call("GET_IS_BUSHTRIP").then(v => {
-                this.isBushTrip = v;
-                if (this.isBushTrip) {
-                    console.log("Bushtrip Detected");
-                }
-                if (this.flightPlanElement) {
-                    this.flightPlanElement.highlightActiveLeg = !this.isBushTrip;
-                    this.flightPlanElement.hideReachedWaypoints = !this.isBushTrip;
-                }
-                this.updateFlightPlanVisibility();
-            });
-        }
     }
     updateFlightPlanVisibility() {
         if (this.showFlightPlan) {
