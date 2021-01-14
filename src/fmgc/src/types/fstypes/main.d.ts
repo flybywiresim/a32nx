@@ -24,6 +24,8 @@
 
 /// <reference path='./FSTypes.d.ts' />
 
+declare const LZUTF8: any;
+
 declare module "WorkingTitle" {
   export class WTDataStore {
     /**

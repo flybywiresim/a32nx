@@ -25,8 +25,7 @@
 import { ManagedFlightPlan, GPS } from '../wtsdk';
 import { FlightPlanSegment } from './FlightPlanSegment';
 import { FlightPlanAsoboSync } from './FlightPlanAsoboSync';
-import { LZUTF8, WTDataStore } from 'WorkingTitle'
-import * as _LZUTF8 from '../utils/LzUtf8'
+import { WTDataStore } from 'WorkingTitle'
 
 /**
  * A system for managing flight plan data used by various instruments.

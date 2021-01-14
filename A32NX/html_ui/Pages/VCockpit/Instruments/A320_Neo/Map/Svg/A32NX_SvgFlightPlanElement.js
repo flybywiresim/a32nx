@@ -110,7 +110,9 @@ class SvgFlightPlanElement extends SvgMapElement {
         let points = [];
         let pIndex = 0;
 
-        for (const waypoint of waypoints) {
+        for (let i = 0; i < waypoints.length; i++) {
+            const waypoint = waypoints[i];
+
             const pathPoints = [];
             pathPoints.push(waypoint.infos.coordinates.toLatLong());
 
