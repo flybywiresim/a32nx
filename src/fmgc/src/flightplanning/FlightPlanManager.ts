@@ -816,15 +816,19 @@ export class FlightPlanManager {
   /**
   * Gets all continuous segments of the flight plan (ie. sections before discontinuities)
   */
-  public getContinuousSegments(): WayPoint[] {
+  public getContinuousSegments(): WayPoint[][] {
       const waypoints = this.getAllWaypoints();
 
       // Find continuous segments in the flight plan
 
-      const continuousSegments = [];
+      const continuousSegments: WayPoint[][] = [];
       const discontinuityIndices = waypoints
           .map((f, i) => f.endsInDiscontinuity ? i : -1)
           .filter(i => i >= 0);
+
+      if (!discontinuityIndices.length) {
+          return [waypoints];
+      }
 
       // If the first discontinuity is after the first waypoint, we add all the waypoints before the first discontinuity as a segment
       if (discontinuityIndices[0] > 0) {
