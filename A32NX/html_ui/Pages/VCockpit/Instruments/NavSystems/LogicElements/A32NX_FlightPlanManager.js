@@ -1190,8 +1190,9 @@ class FlightPlanManager {
             const infos = origin.infos;
             if (infos instanceof AirportInfo) {
                 if (departure) {
-                    if (departure.runwayTransitions[this.getDepartureRunwayIndex()]) {
-                        const depRunway = departure.runwayTransitions[this.getDepartureRunwayIndex()].name.replace("RW", "");
+                    const fullRwy = departure.runwayTransitions[this.getDepartureRunwayIndex()];
+                    if (fullRwy) {
+                        const depRunway = fullRwy.name.replace("RW", "");
                         const runway = infos.oneWayRunways.find(r => {
                             return r.designation.indexOf(depRunway) !== -1;
                         });

@@ -31,5 +31,9 @@ import { LegsProcedure } from './flightplanning/LegsProcedure';
 import { ManagedFlightPlan } from './flightplanning/ManagedFlightPlan';
 import { ProcedureDetails } from './flightplanning/ProcedureDetails';
 import { RawDataMapper } from './flightplanning/RawDataMapper';
+import { GuidanceManager } from "./guidance/GuidanceManager"
 
-export { DirectTo, FlightPlanManager, FlightPlanSegment, getSegmentedFlightPlan, GPS, LegsProcedure, ManagedFlightPlan, ProcedureDetails, RawDataMapper }
+export {
+    DirectTo, FlightPlanManager, FlightPlanSegment, getSegmentedFlightPlan, GPS, LegsProcedure, ManagedFlightPlan, ProcedureDetails, RawDataMapper,
+    GuidanceManager,
+}

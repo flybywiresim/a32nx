@@ -118,11 +118,13 @@ class MapInstrument extends ISvgMapRootElement {
         this.isBushTrip = false;
         this.getDeltaTime = A32NX_Util.createDeltaTimeCalculator(this._lastTime);
         this.flightPlanThrottler = new UpdateThrottler(250);
-        this.approachThrottler = new UpdateThrottler(250);
         this.constraintThrottler = new UpdateThrottler(750);
     }
     get flightPlanManager() {
         return this._flightPlanManager;
+    }
+    get guidanceManager() {
+        return this._guidanceManager;
     }
     get dummyObstacles() {
         if (!this._dummyObstacles) {
@@ -343,6 +345,7 @@ class MapInstrument extends ISvgMapRootElement {
         } else {
             this._flightPlanManager = new fpm.FlightPlanManager(this.instrument);
         }
+        this._guidanceManager = new fpm.GuidanceManager(this._flightPlanManager);
         let bingMapId = this.bingId;
         if (this.instrument.urlConfig.index) {
             bingMapId += "_GPS" + this.instrument.urlConfig.index;
@@ -413,10 +416,10 @@ class MapInstrument extends ISvgMapRootElement {
             this.TCASManager = new A32NX_TCAS_Manager();
             this.airplaneIconElement = new SvgAirplaneElement();
             this.flightPlanElement = new SvgFlightPlanElement();
-            this.flightPlanElement.source = this.flightPlanManager;
+            this.flightPlanElement.source = this.guidanceManager;
             this.flightPlanElement.flightPlanIndex = 0;
             this.tmpFlightPlanElement = new SvgFlightPlanElement();
-            this.tmpFlightPlanElement.source = this.flightPlanManager;
+            this.tmpFlightPlanElement.source = this.guidanceManager;
             this.tmpFlightPlanElement.flightPlanIndex = 1;
             this.directToElement = new SvgBackOnTrackElement();
             Coherent.call("RESET_ROAD_ITERATOR");
@@ -493,18 +496,10 @@ class MapInstrument extends ISvgMapRootElement {
                     });
                 }
             }
-            this.flightPlanManager.updateWaypointIndex();
+            //this.flightPlanManager.updateWaypointIndex();
             this.flightPlanManager.updateFlightPlan();
             if (this.flightPlanThrottler.canUpdate(deltaTime) !== -1) {
                 this.updateFlightPlanVisibility();
-            }
-            if (this.approachThrottler.canUpdate(deltaTime) !== -1) {
-                this.flightPlanManager.updateCurrentApproach();
-                if (this.debugApproachFlightPlanElement) {
-                    Coherent.call("GET_APPROACH_FLIGHTPLAN").then(data => {
-                        this.debugApproachFlightPlanElement.source = data;
-                    });
-                }
             }
             if (!this.showConstraints && this.constraints && this.constraints.length > 0) {
                 this.constraints = [];
@@ -523,15 +518,14 @@ class MapInstrument extends ISvgMapRootElement {
             }
             const lat = SimVar.GetSimVarValue("PLANE LATITUDE", "degree latitude");
             const long = SimVar.GetSimVarValue("PLANE LONGITUDE", "degree longitude");
-            let planeLla;
             let needCenterOnPlane = false;
             if (lat && long && isFinite(lat) && isFinite(long)) {
-                planeLla = new LatLongAlt(lat, long);
-                const unsmoothedMove = this.navMap.setPlaneCoordinates(lat, long, 0 /* smoothness */);
-                if (unsmoothedMove) {
+                //planeLla = new LatLongAlt(lat, long);
+                this.navMap.setPlaneCoordinates(lat, long, 0 /* smoothness */);
+                /*if (unsmoothedMove) {
                     console.warn("Plane appears to have been teleported. FlightPlan active Waypoint index recalculated.");
                     this.flightPlanManager.recomputeActiveWaypointIndex();
-                }
+                }*/
                 if (this.eBingMode === EBingMode.PLANE) {
                     needCenterOnPlane = true;
                     if (this.bEnableCenterOnFplnWaypoint) {
@@ -777,7 +771,7 @@ class MapInstrument extends ISvgMapRootElement {
                             }
                         }
                     }
-                    const approachWaypoints = this.flightPlanManager.getApproachWaypoints();
+                    /*const approachWaypoints = this.flightPlanManager.getApproachWaypoints();
                     const lAppr = approachWaypoints.length;
                     for (let i = 0; i < lAppr; i++) {
                         const apprWaypoint = approachWaypoints[i];
@@ -800,7 +794,7 @@ class MapInstrument extends ISvgMapRootElement {
                     if (this.tmpDirectToElement) {
                         this.navMap.mapElements.push(this.tmpDirectToElement);
                     }
-                    this.navMap.mapElements.push(...this.backOnTracks);
+                    this.navMap.mapElements.push(...this.backOnTracks);*/
                     if ((SimVar.GetSimVarValue("L:FLIGHTPLAN_USE_DECEL_WAYPOINT", "number") === 1) && this.flightPlanManager.decelWaypoint) {
                         var svg = this.flightPlanManager.decelWaypoint.getSvgElement(this.navMap.index);
                         svg.ident = " ";

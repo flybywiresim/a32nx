@@ -20,15 +20,17 @@ const MAX_FIX_ROW = 5;
 
 class CDUFlightPlanPage {
     static ShowPage(mcdu, offset = 0) {
-        mcdu.flightPlanManager.updateWaypointDistances(false /* approach */);
-        mcdu.flightPlanManager.updateWaypointDistances(true /* approach */);
+        //mcdu.flightPlanManager.updateWaypointDistances(false /* approach */);
+        //mcdu.flightPlanManager.updateWaypointDistances(true /* approach */);
         mcdu.clearDisplay();
         mcdu.page.Current = mcdu.page.FlightPlanPage;
         mcdu.activeSystem = 'FMGC';
         CDUFlightPlanPage._timer = 0;
+        const renderedWaypointIndex = mcdu.flightPlanManager.getActiveWaypointIndex();
         mcdu.pageUpdate = () => {
             CDUFlightPlanPage._timer++;
-            if (CDUFlightPlanPage._timer >= 100) {
+            const waypointIndex = mcdu.flightPlanManager.getActiveWaypointIndex();
+            if (CDUFlightPlanPage._timer >= 100 || waypointIndex !== renderedWaypointIndex) {
                 CDUFlightPlanPage.ShowPage(mcdu, offset);
             }
         };

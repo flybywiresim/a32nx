@@ -32,7 +32,6 @@ class SvgFlightPlanElement extends SvgMapElement {
     }
     id(map) {
         return "flight-plan-" + this.flightPlanIndex + "-map-" + map.index;
-        ;
     }
     createDraw(map) {
         const container = document.createElementNS(Avionics.SVG.NS, "svg");
@@ -97,173 +96,71 @@ class SvgFlightPlanElement extends SvgMapElement {
         this._highlightedLegIndex = SimVar.GetSimVarValue("L:MAP_FLIGHTPLAN_HIGHLIT_WAYPOINT", "number");
         this.points = [];
 
-        const paths = this.source.getContinuousSegments().map(segment => this.makePathFromWaypoints(segment, map));
+        const paths = this.source.getSegments().map(segments => this.makePathFromSegments(segments, map));
         paths.forEach((path, index) => this.makeOrUpdatePathElement(path, index, map));
         this.removeTrailingPathElements(paths.length);
+
+        const ppos = new LatLong(
+            SimVar.GetSimVarValue("PLANE LATITUDE", "degree latitude"),
+            SimVar.GetSimVarValue("PLANE LONGITUDE", "degree longitude"),
+            0,
+        );
+
+        const allSegments = this.source.getSegments();
+        let final = [];
+        const nestedAbeam = allSegments.map(s => s.filter(x => x.isAbeam(ppos)));
+        for (const i of nestedAbeam) {
+            final = final.concat(i);
+        }
+
+        const abeam = final.map(s => this.makePathFromSegments([s], map));
+        abeam.forEach((path, index) => this.makeOrUpdatePathElementAbeam(path, index, map));
+        this.removeTrailingPathElementsAbeam(abeam.length);
     }
 
     /**
-     * @param waypoints {WayPoint[]}
+     * @param segments {Segment[]}
      * @param map
      */
-    makePathFromWaypoints(waypoints, map) {
-        let points = [];
-        let pIndex = 0;
+    makePathFromSegments(segments, map) {
+        //const points = [];
+        //const arcs = [];
 
-        for (let i = 0; i < waypoints.length; i++) {
-            const waypoint = waypoints[i];
+        const pathParts = [];
 
-            const pathPoints = [];
-            pathPoints.push(waypoint.infos.coordinates.toLatLong());
+        for (const segment of segments) {
+            if (!pathParts.length) {
+                const { x: fromX, y: fromY } = map.coordinatesToXY(segment.from);
+                const p1x = fastToFixed(fromX, 1);
+                const p1y = fastToFixed(fromY, 1);
+                pathParts.push(`M ${p1x} ${p1y}`);
+            }
 
-            for (let j = 0; j < pathPoints.length; j++) {
-                this.latLong = pathPoints[j];
+            switch (segment.type) {
+                case "straightTrack":
+                {
+                    const { x: toX, y: toY } = map.coordinatesToXY(segment.to);
+                    const p2x = fastToFixed(toX, 1);
+                    const p2y = fastToFixed(toY, 1);
+                    pathParts.push(`L ${p2x} ${p2y}`);
+                    break;
+                }
+                case "turn":
+                {
+                    const r = fastToFixed(segment.radius * map.NMToPixels(1), 0);
+                    const { x: toX, y: toY } = map.coordinatesToXY(segment.to);
 
-                let lastLat = NaN;
-                let lastLong = NaN;
-                if (this.latLong.lat !== lastLat && this.latLong.long !== lastLong) {
-                    const deltaLong = Math.abs(lastLong - this.latLong.long);
+                    const p2x = fastToFixed(toX, 1);
+                    const p2y = fastToFixed(toY, 1);
+                    const cw = segment.clockwise;
 
-                    if (deltaLong > 2) {
-                        const lastX = Math.cos(lastLat / 180 * Math.PI) * Math.cos(lastLong / 180 * Math.PI);
-                        const lastY = Math.cos(lastLat / 180 * Math.PI) * Math.sin(lastLong / 180 * Math.PI);
-                        const lastZ = Math.sin(lastLat / 180 * Math.PI);
-                        const X = Math.cos(this.latLong.lat / 180 * Math.PI) * Math.cos(this.latLong.long / 180 * Math.PI);
-                        const Y = Math.cos(this.latLong.lat / 180 * Math.PI) * Math.sin(this.latLong.long / 180 * Math.PI);
-                        const Z = Math.sin(this.latLong.lat / 180 * Math.PI);
-                        const stepCount = Math.floor(deltaLong / 2);
-                        for (let k = 0; k < stepCount; k++) {
-                            const d = (k + 1) / (stepCount + 1);
-                            const x = lastX * (1 - d) + X * d;
-                            const y = lastY * (1 - d) + Y * d;
-                            const z = lastZ * (1 - d) + Z * d;
-                            const long = Math.atan2(y, x) / Math.PI * 180;
-                            const hyp = Math.sqrt(x * x + y * y);
-                            const lat = Math.atan2(z, hyp) / Math.PI * 180;
-                            if (points[pIndex]) {
-                                map.coordinatesToXYToRef(new LatLong(lat, long), points[pIndex]);
-                            } else {
-                                const p = map.coordinatesToXY(new LatLong(lat, long));
-                                p.refWP = waypoint;
-                                p.refWPIndex = i;
-                                points.push(p);
-                            }
-                            pIndex++;
-                        }
-                    }
-
-                    lastLat = this.latLong.lat;
-                    lastLong = this.latLong.long;
-
-                    if (points[pIndex]) {
-                        map.coordinatesToXYToRef(this.latLong, points[pIndex]);
-                        if (i === 0) {
-                            if (points[0].x === this._lastP0X && points[0].y === this._lastP0Y) {
-                                this._forceFullRedraw++;
-                                if (this._forceFullRedraw < 60) {
-                                    return;
-                                }
-                                this._forceFullRedraw = 0;
-                            }
-                            this._lastP0X = points[0].x;
-                            this._lastP0Y = points[0].y;
-                        }
-                    } else {
-                        const p = map.coordinatesToXY(this.latLong);
-                        p.refWP = waypoint;
-                        p.refWPIndex = i;
-                        points.push(p);
-                    }
-                    pIndex++;
+                    pathParts.push(`A ${r} ${r} 0 0 ${cw ? 1 : 0} ${p2x} ${p2y}`);
+                    break;
                 }
             }
         }
 
-        for (let bevels = 0; bevels < 4; bevels++) {
-            const bevelAmount = map.NMToPixels(0.5) / (bevels + 1);
-            if (points.length > 2) {
-                const beveledPoints = [points[0]];
-                for (let i = 1; i < points.length - 1; i++) {
-                    const pPrev = points[i - 1];
-                    const p = points[i];
-                    const pNext = points[i + 1];
-                    if ((pPrev.x == p.x && pPrev.y == p.y) || (pNext.x == p.x && pNext.y == p.y)) {
-                        beveledPoints.push(p);
-                        continue;
-                    }
-                    let xPrev = pPrev.x - p.x;
-                    let yPrev = pPrev.y - p.y;
-                    const dPrev = Math.sqrt(xPrev * xPrev + yPrev * yPrev);
-                    xPrev /= dPrev;
-                    yPrev /= dPrev;
-                    let xNext = pNext.x - p.x;
-                    let yNext = pNext.y - p.y;
-                    const dNext = Math.sqrt(xNext * xNext + yNext * yNext);
-                    xNext /= dNext;
-                    yNext /= dNext;
-                    const b = Math.min(dPrev / 3, dNext / 3, bevelAmount);
-                    const refWPIndex = p.refWPIndex + (((bevels === 1) && (i % 2 === 0)) ? 1 : 0);
-                    const refWP = (((bevels === 1) && (i % 2 === 0)) ? pNext.refWP : p.refWP);
-                    beveledPoints.push({
-                        x: p.x + xPrev * b,
-                        y: p.y + yPrev * b,
-                        refWP: refWP,
-                        refWPIndex: refWPIndex,
-                    }, {
-                        x: p.x + xNext * b,
-                        y: p.y + yNext * b,
-                        refWP: refWP,
-                        refWPIndex: refWPIndex,
-                    });
-                }
-                beveledPoints.push(points[points.length - 1]);
-                points = beveledPoints;
-            }
-        }
-
-        if (points.length > 0) {
-            let prevRefWPIndex = points[points.length - 1].refWPIndex;
-            let prevRefWP = points[points.length - 1].refWP;
-            for (let p = points.length - 2; p > 0; p--) {
-                const point = points[p];
-                if (point.refWPIndex > prevRefWPIndex) {
-                    point.refWPIndex = prevRefWPIndex;
-                    point.refWP = prevRefWP;
-                }
-                prevRefWPIndex = point.refWPIndex;
-                prevRefWP = point.refWP;
-            }
-        }
-
-        let pathString = "";
-
-        for (let i = 0; i < points.length - 1; i++) {
-            const p1 = points[i];
-            let p2 = points[i + 1];
-            if (!p2) {
-                p2 = points[i + 2];
-            }
-            if (p1 && p2) {
-                const p1x = fastToFixed(p1.x, 0);
-                const p1y = fastToFixed(p1.y, 0);
-                const p2x = fastToFixed(p2.x, 0);
-                const p2y = fastToFixed(p2.y, 0);
-
-                if (p1x !== p2x || p1y !== p2y) {
-                    if (i === 0) {
-                        pathString += "M" + p1x + " " + p1y + " L" + p2x + " " + p2y + " ";
-                    } else {
-                        if (p2.refWP.endsInDiscontinuity) {
-                            pathString += `M ${p2x} ${p2y} `;
-                        } else {
-                            pathString += "L" + p2x + " " + p2y + " ";
-                        }
-                    }
-                }
-            }
-        }
-
-        return pathString;
+        return pathParts.join(" ");
     }
 
     /**
@@ -311,6 +208,45 @@ class SvgFlightPlanElement extends SvgMapElement {
             existingElement.remove();
             i++;
             existingElement = document.getElementById(`flight-plan-segment-${i}`);
+        }
+    }
+
+    makeOrUpdatePathElementAbeam(pathString, index, map) {
+        const existingElement = document.getElementById(`flight-plan-abeam-${index}`);
+
+        if (existingElement) {
+            if (existingElement.getAttribute("d") !== pathString) {
+                existingElement.setAttribute("d", pathString);
+            }
+        } else {
+            const newElement = document.createElementNS(Avionics.SVG.NS, "path");
+
+            newElement.setAttribute("id", `flight-plan-abeam-${index}`);
+            newElement.setAttribute("d", pathString);
+
+            newElement.setAttribute("stroke", "red");
+
+            newElement.setAttribute("fill", "none");
+
+            newElement.setAttribute("stroke-width", fastToFixed(map.config.flightPlanNonActiveLegWidth, 0));
+            newElement.setAttribute("stroke-linecap", "square");
+
+            document.getElementById(this.id(map))
+                .appendChild(newElement);
+        }
+    }
+
+    /**
+     * Remove any path elements that exist past the expected number of path elements from the DOM.
+     * @param pathCount {number}
+     */
+    removeTrailingPathElementsAbeam(pathCount) {
+        let i = pathCount;
+        let existingElement = document.getElementById(`flight-plan-abeam-${i}`);
+        while (existingElement) {
+            existingElement.remove();
+            i++;
+            existingElement = document.getElementById(`flight-plan-abeam-${i}`);
         }
     }
 
