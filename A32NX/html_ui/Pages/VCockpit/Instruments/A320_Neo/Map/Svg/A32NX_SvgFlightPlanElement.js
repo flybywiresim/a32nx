@@ -97,9 +97,9 @@ class SvgFlightPlanElement extends SvgMapElement {
         this._highlightedLegIndex = SimVar.GetSimVarValue("L:MAP_FLIGHTPLAN_HIGHLIT_WAYPOINT", "number");
         this.points = [];
 
-        this.source.getContinuousSegments()
-            .map(segment => this.makePathFromWaypoints(segment, map))
-            .forEach((path, index) => this.makeOrUpdatePathElement(path, index, map));
+        const paths = this.source.getContinuousSegments().map(segment => this.makePathFromWaypoints(segment, map));
+        paths.forEach((path, index) => this.makeOrUpdatePathElement(path, index, map));
+        this.removeTrailingPathElements(paths.length);
     }
 
     /**
@@ -297,6 +297,20 @@ class SvgFlightPlanElement extends SvgMapElement {
 
             document.getElementById(this.id(map))
                 .appendChild(newElement);
+        }
+    }
+
+    /**
+     * Remove any path elements that exist past the expected number of path elements from the DOM.
+     * @param pathCount {number}
+     */
+    removeTrailingPathElements(pathCount) {
+        let i = pathCount;
+        let existingElement = document.getElementById(`flight-plan-segment-${i}`);
+        while (existingElement) {
+            existingElement.remove();
+            i++;
+            existingElement = document.getElementById(`flight-plan-segment-${i}`);
         }
     }
 
