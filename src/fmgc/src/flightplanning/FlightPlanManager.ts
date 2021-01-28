@@ -755,6 +755,21 @@ export class FlightPlanManager {
   }
 
   /**
+   * Truncates a flight plan after a specific waypoint.
+   * @param index The index of the first waypoint to remove.
+   * @param callback A callback to call when the operation finishes.
+   */
+  public truncateWaypoints(index: number, thenSetActive = false, callback = () => { }): void {
+    const fp = this._flightPlans[this._currentFlightPlanIndex];
+    for (let i = fp.length; i >= index; i--) {
+      fp.removeWaypoint(index);
+    }
+
+    this._updateFlightPlanVersion();
+    callback();
+  }
+
+  /**
    * Gets the index of a given waypoint in the current flight plan.
    * @param waypoint The waypoint to get the index of.
    */
