@@ -598,7 +598,20 @@ export class FlightPlanManager {
     if (currentFlightPlan.hasDestination) {
       currentFlightPlan.removeWaypoint(currentFlightPlan.length - 1);
     }
-    this._flightPlans[this._currentFlightPlanIndex].addWaypoint(waypoint);
+
+    currentFlightPlan.addWaypoint(waypoint);
+
+    // make the waypoint before a discontinuity
+    const waypoints = currentFlightPlan.waypoints;
+    const destinationIndex = currentFlightPlan.destinationAirfieldIndex;
+    if (waypoints.length > 0 && destinationIndex && destinationIndex > 0) {
+      const previous = currentFlightPlan.waypoints[destinationIndex - 1];
+      // ensure we do not overwrite a possible discontinuityCanBeCleared
+      if (!previous.endsInDiscontinuity) {
+        previous.endsInDiscontinuity = true;
+        previous.discontinuityCanBeCleared = true;
+      }
+    }
 
     this._updateFlightPlanVersion();
     callback();
