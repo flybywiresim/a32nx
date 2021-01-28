@@ -257,6 +257,16 @@ export class ManagedFlightPlan {
         this.reflowSegments();
         this.reflowDistances();
 
+        // transfer a potential discontinuity backwards
+        const finalIndex = this.waypoints.indexOf(mappedWaypoint);
+        const previousWp = finalIndex > 0 ? this.waypoints[finalIndex - 1] : undefined;
+        if (previousWp && previousWp.endsInDiscontinuity) {
+          previousWp.endsInDiscontinuity = false;
+          previousWp.discontinuityCanBeCleared = undefined;
+          mappedWaypoint.endsInDiscontinuity = true;
+          mappedWaypoint.discontinuityCanBeCleared = true;
+        }
+
         if (this.activeWaypointIndex === 0 && this.length > 1) {
           this.activeWaypointIndex = 1;
         }
@@ -273,19 +283,23 @@ export class ManagedFlightPlan {
    */
   public removeWaypoint(index: number): void {
 
+    let removed = null;
     if (this.originAirfield && index === 0) {
+      removed = this.originAirfield;
       this.originAirfield = undefined;
 
       this.reflowSegments();
       this.reflowDistances();
     }
     else if (this.destinationAirfield && index === this.length - 1) {
+      removed = this.destinationAirfield;
       this.destinationAirfield = undefined;
     }
     else {
       const segment = this.findSegmentByWaypointIndex(index);
       if (segment) {
-        segment.waypoints.splice(index - segment.offset, 1);
+        const spliced = segment.waypoints.splice(index - segment.offset, 1);
+        removed = spliced[0];
 
         if (segment.waypoints.length === 0 && segment.type !== SegmentType.Enroute) {
           this.removeSegment(segment.type);
@@ -294,6 +308,12 @@ export class ManagedFlightPlan {
         this.reflowSegments();
         this.reflowDistances();
       }
+    }
+
+    // transfer a potential discontinuity forward
+    if (removed && removed.endsInDiscontinuity && index > 0) {
+      this.waypoints[index - 1].endsInDiscontinuity = true;
+      this.waypoints[index - 1].discontinuityCanBeCleared = true;
     }
 
     if (index < this.activeWaypointIndex) {
@@ -647,6 +667,7 @@ export class ManagedFlightPlan {
 
           const faLeg = procedure.buildWaypoint(`${Math.round(altitudeFeet)}`, coordinates);
           faLeg.endsInDiscontinuity = true;
+          faLeg.discontinuityCanBeCleared = true;
 
           this.addWaypoint(faLeg, undefined, segment.type)
         }
@@ -746,7 +767,9 @@ export class ManagedFlightPlan {
 
         const prevWaypointIndex = segment.offset - 1;
         if (prevWaypointIndex > 0) {
-          this.getWaypoint(segment.offset - 1).endsInDiscontinuity = true;
+          const prevWaypoint = this.getWaypoint(segment.offset - 1);
+          prevWaypoint.endsInDiscontinuity = true;
+          prevWaypoint.discontinuityCanBeCleared = true;
         }
       }
 
@@ -827,7 +850,9 @@ export class ManagedFlightPlan {
       segment = FlightPlanSegment.Empty;
     }
     else {
-      segment.waypoints[Math.max((startIndex - 1) - segment.offset, 0)].endsInDiscontinuity = true;
+      const waypoint = segment.waypoints[Math.max((startIndex - 1) - segment.offset, 0)];
+      waypoint.endsInDiscontinuity = true;
+      waypoint.discontinuityCanBeCleared = true;
     }
 
     return { startIndex, segment };

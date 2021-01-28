@@ -1829,6 +1829,13 @@ class FMCMainDisplay extends BaseAirliners {
         });
     }
 
+    clearDiscontinuity(index, callback = EmptyCallback.Void) {
+        this.ensureCurrentFlightPlanIsTemporary(() => {
+            this.flightPlanManager.clearDiscontinuity(index);
+            callback();
+        });
+    }
+
     eraseTemporaryFlightPlan(callback = EmptyCallback.Void) {
         this.flightPlanManager.setCurrentFlightPlanIndex(0, () => {
             SimVar.SetSimVarValue("L:FMC_FLIGHT_PLAN_IS_TEMPORARY", "number", 0);

@@ -453,9 +453,9 @@ class CDUFlightPlanPage {
 
                                     mcdu.onLeftInput[fixRow + 1] = (value) => {
                                         if (value === FMCMainDisplay.clrValue && waypoint.discontinuityCanBeCleared) {
-                                            waypoint.endsInDiscontinuity = false;
-
-                                            CDUFlightPlanPage.ShowPage(mcdu, offset);
+                                            mcdu.clearDiscontinuity(index, () => {
+                                                CDUFlightPlanPage.ShowPage(mcdu, offset);
+                                            });
                                         }
                                     };
                                 }
