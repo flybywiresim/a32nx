@@ -491,7 +491,11 @@ export class ManagedFlightPlan {
     for (let i = 0; i < this._segments.length; i++) {
       const seg = this._segments[i];
       newFlightPlan._segments[i] = Object.assign(new FlightPlanSegment(seg.type, seg.offset, []), seg);
-      newFlightPlan._segments[i].waypoints = [...seg.waypoints];
+      newFlightPlan._segments[i].waypoints = [...seg.waypoints.map(wp => {
+        const clone = new (wp as any).constructor();
+        Object.assign(clone, wp);
+        return clone;
+      })];
     }
 
     newFlightPlan.procedureDetails = Object.assign(new ProcedureDetails(), this.procedureDetails);
