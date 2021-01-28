@@ -494,9 +494,9 @@ class MapInstrument extends ISvgMapRootElement {
                 }
             }
             this.flightPlanManager.updateWaypointIndex();
+            this.flightPlanManager.updateFlightPlan();
             if (this.flightPlanThrottler.canUpdate(deltaTime) !== -1) {
                 this.updateFlightPlanVisibility();
-                this.flightPlanManager.updateFlightPlan();
             }
             if (this.approachThrottler.canUpdate(deltaTime) !== -1) {
                 this.flightPlanManager.updateCurrentApproach();
