@@ -1,0 +1,48 @@
+<ModelBehaviors>
+    <Template Name="A32NX_Sidestick_Template">
+        <DefaultTemplateParameters>
+            <ID>1</ID>
+        </DefaultTemplateParameters>
+        
+        <UseTemplate Name="A32NX_Sidestick_SubTemplate">
+        </UseTemplate>
+    </Template>
+
+    <Template Name="A32NX_Sidestick_SubTemplate">
+        <DefaultTemplateParameters>
+            <Condition Check="CREATE_TWO_NODES">
+                <True>
+                    <NODE_ID>HANDLING_Yoke_1</NODE_ID>
+                    <NODE_ID2>HANDLING_Yoke_2</NODE_ID2>
+                </True>
+                <False>
+                    <NODE_ID>HANDLING_Yoke_#ID#</NODE_ID>
+                </False>
+            </Condition>
+
+            <ANIM_CODE_X>(L:A32NX_SIDESTICK_POSITION_X) 100 * 100 +</ANIM_CODE_X>
+            <ANIM_CODE_Y>(L:A32NX_SIDESTICK_POSITION_Y) 100 * 100 +</ANIM_CODE_Y>
+
+            <ANIM_NAME_YOKE_X>HANDLING_YOKE_Lever_StickLR</ANIM_NAME_YOKE_X>
+            <ANIM_NAME_YOKE_Y>HANDLING_YOKE_Lever_StickForeAft</ANIM_NAME_YOKE_Y>
+            <PART_ID>HANDLING_Yoke</PART_ID>
+        </DefaultTemplateParameters>
+        <Component ID="#NODE_ID#_#ID#" Node="#NODE_ID#">
+            <UseTemplate Name="ASOBO_GT_Anim_Code">
+                <ANIM_NAME>#ANIM_NAME_YOKE_X#</ANIM_NAME>
+                <ANIM_LENGTH>200</ANIM_LENGTH>
+                <ANIM_CODE>#ANIM_CODE_X#</ANIM_CODE>
+            </UseTemplate>
+            <UseTemplate Name="ASOBO_GT_Anim_Code">
+                <ANIM_NAME>#ANIM_NAME_YOKE_Y#</ANIM_NAME>
+                <ANIM_LENGTH>200</ANIM_LENGTH>
+                <ANIM_CODE>#ANIM_CODE_Y#</ANIM_CODE>
+            </UseTemplate>
+        </Component>
+        <Condition Check="CREATE_TWO_NODES">
+            <UseTemplate Name="ASOBO_GT_ComponentWith_PART_ID">
+                <NODE_ID>#NODE_ID2#</NODE_ID>
+            </UseTemplate>
+        </Condition>
+    </Template>
+</ModelBehaviors>

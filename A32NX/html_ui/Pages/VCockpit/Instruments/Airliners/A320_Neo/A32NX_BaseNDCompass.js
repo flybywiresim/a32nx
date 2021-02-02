@@ -253,13 +253,11 @@ class Jet_NDCompass extends HTMLElement {
         if (this.referenceMode == Jet_NDCompass_Reference.HEADING) {
             if (this.aircraft == Aircraft.A320_NEO) {
                 var selectedHeading = simSelectedHeading;
-                let showSelectedHeading = Simplane.getAutoPilotHeadingSelected();
-                const showTrackLine = showSelectedHeading;
-                if (!showSelectedHeading) {
-                    showSelectedHeading = SimVar.GetSimVarValue("L:A320_FCU_SHOW_SELECTED_HEADING", "number") === 1;
-                    if (showSelectedHeading) {
-                        selectedHeading = Simplane.getAutoPilotSelectedHeadingLockValue(false);
-                    }
+                const showSelectedHeading = SimVar.GetSimVarValue("L:A320_FCU_SHOW_SELECTED_HEADING", "number") === 1;
+                const lateralMode = SimVar.GetSimVarValue("L:A32NX_FMA_LATERAL_MODE", "Number");
+                const showTrackLine = (lateralMode === 10 || lateralMode === 11);
+                if (showSelectedHeading) {
+                    selectedHeading = SimVar.GetSimVarValue("L:A32NX_AUTOPILOT_HEADING_SELECTED", "Degrees");
                 }
                 var roundedSelectedHeading = fastToFixed(selectedHeading, 3);
                 this.setAttribute("selected_heading_bug_rotation", roundedSelectedHeading);

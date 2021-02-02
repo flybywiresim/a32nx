@@ -6,8 +6,9 @@
     "lint-fix": "npm run lint -- --fix",
     "prettier": "prettier --write **/*.json **/*.yml src/instruments/**/*.css",
     "build:instruments": "rollup -c src/instruments/rollup.config.js",
-    "postinstall": "husky install",
-    "serve:efb": "cd src/instruments/src/EFB/ && rollup -wc ./rollup.development.config.js"
+    "serve:efb": "cd src/instruments/src/EFB/ && rollup -wc ./rollup.development.config.js",
+    "build:fbw": "cd src/fbw && ./build.sh",
+    "postinstall": "husky install"
   },
   "lint-staged": {
     "*.{js,mjs,jsx}": "eslint --cache --fix",

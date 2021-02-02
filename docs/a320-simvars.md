@@ -315,7 +315,6 @@
     - Green Dot speed (clean config or O)
     - is mach corrected
 
-
 - A32NX_VSPEEDS_LANDING_CONF3
     - Bool
     - True if FLAPS 3 is selected in perf page
@@ -750,3 +749,11 @@
     - {number}
         - 1
         - 2
+
+- A32NX_SIDESTICK_POSITION_X
+    - Number
+    - Provides the direct sidestick position (lateral)
+
+- A32NX_SIDESTICK_POSITION_Y
+    - Number
+    - Provides the direct sidestick position (longitudinal)

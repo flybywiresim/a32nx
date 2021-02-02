@@ -683,7 +683,7 @@ var Jet_PFD_FlightDirector;
                     this.headingLine.setAttribute("transform", "translate(" + 255 + ", 0)");
                 } else {
                     const currentPlaneBank = Simplane.getBank();
-                    const currentFDBank = Simplane.getFlightDirectorBank();
+                    const currentFDBank = SimVar.GetSimVarValue("L:A32NX_FLIGHT_DIRECTOR_BANK", "number");
                     this._fdBank += (currentFDBank - this._fdBank) * Math.min(1.0, _deltaTime * 0.001);
                     const lineX = Math.max(-1.0, Math.min(1.0, (currentPlaneBank - this._fdBank) / this.getFDBankLimit())) * this.getFDBankDisplayLimit();
                     this.headingLine.setAttribute("transform", "translate(" + lineX + ", 0)");
@@ -691,7 +691,7 @@ var Jet_PFD_FlightDirector;
             }
             if (this.pitchLine != null) {
                 const currentPlanePitch = Simplane.getPitch();
-                let currentFDPitch = Simplane.getFlightDirectorPitch();
+                let currentFDPitch = SimVar.GetSimVarValue("L:A32NX_FLIGHT_DIRECTOR_PITCH", "number");
                 const altAboveGround = Simplane.getAltitudeAboveGround();
                 const _bForcedFdPitchThisFrame = false;
                 if (altAboveGround > 0 && altAboveGround < 10) {
@@ -849,12 +849,9 @@ var Jet_PFD_FlightDirector;
                 const currentHeading = getCurrentHeading(originalBodyVelocityZ);
                 const currentPitch = getCurrentPitch(originalBodyVelocityZ);
                 const x = this.calculatePosXFromBank(-currentHeading, 0);
-
-                const y = Simplane.getAutoPilotVerticalSpeedHoldActive() ?
-                    this.calculatePosYFromPitch(Simplane.getPitch(), -SimVar.GetSimVarValue("L:A32NX_AUTOPILOT_FPA_SELECTED", "Degree")) :
-                    this.calculatePosYFromPitch(Simplane.getPitch(), Simplane.getFlightDirectorPitch()) + this.calculatePosYFromPitch(Simplane.getPitch(), currentPitch);
-
-                const angle = Simplane.getBank() - Simplane.getFlightDirectorBank();
+                const y = this.calculatePosYFromPitch(Simplane.getPitch(), SimVar.GetSimVarValue("L:A32NX_FLIGHT_DIRECTOR_PITCH", "number")) +
+                    this.calculatePosYFromPitch(Simplane.getPitch(), currentPitch);
+                const angle = Simplane.getBank() - SimVar.GetSimVarValue("L:A32NX_FLIGHT_DIRECTOR_BANK", "number");
                 this.group.setAttribute("transform", "translate(" + x + ", " + y + ") rotate(" + angle + ")");
             }
         }

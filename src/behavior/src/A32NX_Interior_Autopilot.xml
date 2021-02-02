@@ -9,20 +9,16 @@
         <DefaultTemplateParameters>
             <DEFAULT_NAME>Autopilot</DEFAULT_NAME>
             <HELPID>HELPID_AUTOPILOT_MASTER</HELPID>
-            <TOOLTIPID>%((A:AUTOPILOT MASTER, bool))%{if}TT:COCKPIT.TOOLTIPS.AUTOPILOT_PANEL_AP_ON%{else}TT:COCKPIT.TOOLTIPS.AUTOPILOT_PANEL_AP_OFF%{end}</TOOLTIPID>
+            <TOOLTIPID>%((L:A32NX_AUTOPILOT_#ID#_ACTIVE, bool))%{if}TT:COCKPIT.TOOLTIPS.AUTOPILOT_PANEL_AP_ON%{else}TT:COCKPIT.TOOLTIPS.AUTOPILOT_PANEL_AP_OFF%{end}</TOOLTIPID>
             <AP_COUNT>1</AP_COUNT>
             <ID>1</ID>
             <ON_AP_MASTER_SWITCH></ON_AP_MASTER_SWITCH>
         </DefaultTemplateParameters>
         <OverrideTemplateParameters>
-            <RESET_CODE>
-                1 #ID# != if{ 0 (&gt;L:XMLVAR_Autopilot_1_Status) }
-                2 #ID# != if{ 0 (&gt;L:XMLVAR_Autopilot_2_Status) }
-            </RESET_CODE>
             <TEST_CODE>1</TEST_CODE>
             <Condition Check="ID" Match="1">
                 <True>
-                    <INIT>(A:AUTOPILOT MASTER, Bool) (&gt;L:XMLVAR_Autopilot_#ID#_Status)</INIT>
+                    <INIT>(L:A32NX_AUTOPILOT_#ID#_ACTIVE, Bool)</INIT>
                 </True>
             </Condition>
         </OverrideTemplateParameters>
@@ -31,45 +27,14 @@
                 <UseTemplate Name="ASOBO_GT_Update">
                     <FREQUENCY>3</FREQUENCY>
                     <UPDATE_CODE>
-                        (A:AUTOPILOT MASTER, Bool) (L:XMLVAR_Autopilot_1_Status) (L:XMLVAR_Autopilot_2_Status) or != if{
-                            #RESET_CODE#
-                            (A:AUTOPILOT MASTER, Bool) (&gt;L:XMLVAR_Autopilot_#ID#_Status)
-                        }
+                        (L:A32NX_AUTOPILOT_#ID#_ACTIVE, Bool)
                     </UPDATE_CODE>
                 </UseTemplate>
             </True>
         </Condition>
         <UseTemplate Name="ASOBO_AUTOPILOT_Push_Template">
-            <LEFT_SINGLE_CODE>
-
-                (L:#PLANE_NAME#_AUTOPILOT_APPR_MODE, bool) if{
-                    (&gt;K:AP_LOC_HOLD_ON)
-                    (&gt;K:AP_LOC_HOLD_OFF)
-                }
-                (L:#PLANE_NAME#_AUTOPILOT_LOC_MODE, bool) if{
-                    (&gt;K:AP_LOC_HOLD)
-                }
-                (A:AUTOPILOT DISENGAGED, Bool) ! #TEST_CODE# and  if{
-                    #RESET_CODE#
-                    (L:XMLVAR_Autopilot_#ID#_Status) ! (&gt;L:XMLVAR_Autopilot_#ID#_Status)
-                    (L:XMLVAR_Autopilot_1_Status) (L:XMLVAR_Autopilot_2_Status) or
-                    (A:AUTOPILOT MASTER, Bool) != if{
-
-                        (&gt;K:AP_MASTER)
-                        (A:AUTOPILOT MASTER, Bool) ! if{
-                            0 (&gt;L:XMLVAR_Autopilot_#ID#_Status)
-                        }
-                    }
-                }
-                (L:#PLANE_NAME#_AUTOPILOT_APPR_MODE, bool) if{
-                    (&gt;K:AP_APR_HOLD)
-                }
-                (L:#PLANE_NAME#_AUTOPILOT_LOC_MODE, bool) if{
-                    (&gt;K:AP_LOC_HOLD)
-                }
-
-            </LEFT_SINGLE_CODE>
-            <EMISSIVE_CODE_ACTIVE>#APPR_CONDITION# (A:AUTOPILOT MASTER, Bool) (L:XMLVAR_Autopilot_#ID#_Status) and or</EMISSIVE_CODE_ACTIVE>
+            <LEFT_SINGLE_CODE>(&gt;H:A320_Neo_FCU_AP_#ID#_PUSH)</LEFT_SINGLE_CODE>
+            <EMISSIVE_CODE_ACTIVE>(L:A32NX_AUTOPILOT_#ID#_ACTIVE, Bool)</EMISSIVE_CODE_ACTIVE>
         </UseTemplate>
     </Template>
 
@@ -82,24 +47,12 @@
         <DefaultTemplateParameters>
             <DEFAULT_NAME>Localizer</DEFAULT_NAME>
             <HELPID>HELPID_AUTOPILOT_NAV_HOLD</HELPID>
-            <TOOLTIPID>%(L:#PLANE_NAME#_AUTOPILOT_LOC_MODE, bool)%{if}TT:COCKPIT.TOOLTIPS.AUTOPILOT_PANEL_LOC_ON%{else}TT:COCKPIT.TOOLTIPS.AUTOPILOT_PANEL_LOC_OFF%{end}</TOOLTIPID>
+            <TOOLTIPID>%((L:#PLANE_NAME#_AUTOPILOT_LOC_MODE, bool))%{if}TT:COCKPIT.TOOLTIPS.AUTOPILOT_PANEL_LOC_ON%{else}TT:COCKPIT.TOOLTIPS.AUTOPILOT_PANEL_LOC_OFF%{end}</TOOLTIPID>
         </DefaultTemplateParameters>
 
         <UseTemplate Name="ASOBO_AUTOPILOT_Push_Template">
-            <LEFT_SINGLE_CODE>
-
-                (L:#PLANE_NAME#_AUTOPILOT_LOC_MODE, bool) if{
-                    0 (&gt;L:#PLANE_NAME#_AUTOPILOT_APPR_MODE)
-                    0 (&gt;L:#PLANE_NAME#_AUTOPILOT_LOC_MODE)
-                    (&gt;K:AP_LOC_HOLD)
-                } els{
-                    0 (&gt;L:#PLANE_NAME#_AUTOPILOT_APPR_MODE)
-                    1 (&gt;L:#PLANE_NAME#_AUTOPILOT_LOC_MODE)
-                    (&gt;K:AP_LOC_HOLD)
-                }
-
-            </LEFT_SINGLE_CODE>
-            <EMISSIVE_CODE_ACTIVE>(L:#PLANE_NAME#_AUTOPILOT_LOC_MODE, bool)</EMISSIVE_CODE_ACTIVE>
+            <LEFT_SINGLE_CODE>(&gt;H:A320_Neo_FCU_LOC_PUSH)</LEFT_SINGLE_CODE>
+            <EMISSIVE_CODE_ACTIVE>(L:A32NX_FCU_LOC_MODE_ACTIVE, bool)</EMISSIVE_CODE_ACTIVE>
         </UseTemplate>
     </Template>
 
@@ -116,20 +69,8 @@
         </DefaultTemplateParameters>
 
         <UseTemplate Name="ASOBO_AUTOPILOT_Push_Template">
-            <LEFT_SINGLE_CODE>
-
-                (L:#PLANE_NAME#_AUTOPILOT_APPR_MODE, bool) if{
-                    0 (&gt;L:#PLANE_NAME#_AUTOPILOT_APPR_MODE)
-                    (&gt;K:AP_LOC_HOLD_ON)
-                    (&gt;K:AP_LOC_HOLD_OFF)
-                } els{
-                    1 (&gt;L:#PLANE_NAME#_AUTOPILOT_APPR_MODE)
-                    0 (&gt;L:#PLANE_NAME#_AUTOPILOT_LOC_MODE)
-                    (&gt;K:AP_APR_HOLD_ON)
-                }
-
-            </LEFT_SINGLE_CODE>
-            <EMISSIVE_CODE_ACTIVE>(L:#PLANE_NAME#_AUTOPILOT_APPR_MODE, bool)</EMISSIVE_CODE_ACTIVE>
+            <LEFT_SINGLE_CODE>(&gt;H:A320_Neo_FCU_APPR_PUSH)</LEFT_SINGLE_CODE>
+            <EMISSIVE_CODE_ACTIVE>(L:A32NX_FCU_APPR_MODE_ACTIVE, bool)</EMISSIVE_CODE_ACTIVE>
         </UseTemplate>
     </Template>
     

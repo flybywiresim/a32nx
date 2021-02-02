@@ -122,8 +122,8 @@ class A320_Neo_PFD_MainPage extends NavSystemPage {
         }
 
         if (this.yokePositionThrottler.canUpdate(_deltaTime) != -1) {
-            const YokeXPosition = 40.45 + (18.4 * SimVar.GetSimVarValue("YOKE X POSITION", "Position"));
-            const YokeYPosition = 47.95 - (14.45 * SimVar.GetSimVarValue("YOKE Y POSITION", "Position"));
+            const YokeXPosition = 40.45 + (18.4 * SimVar.GetSimVarValue("L:A32NX_SIDESTICK_POSITION_X", "Number"));
+            const YokeYPosition = 47.95 - (14.45 * SimVar.GetSimVarValue("L:A32NX_SIDESTICK_POSITION_Y", "Number"));
 
             this.groundCursor.style.left = YokeXPosition.toString() + "%";
             this.groundCursor.style.top = YokeYPosition.toString() + "%";
@@ -371,11 +371,9 @@ class A320_Neo_PFD_Attitude extends NavSystemElement {
             this.hsi.update(_deltaTime);
 
             const flightDirectorActive = SimVar.GetSimVarValue(`AUTOPILOT FLIGHT DIRECTOR ACTIVE:1`, "bool");
-            const apHeadingModeSelected = Simplane.getAutoPilotHeadingSelected();
-            const fcuShowHdg = SimVar.GetSimVarValue("L:A320_FCU_SHOW_SELECTED_HEADING", "number");
-            const showSelectedHdg = !flightDirectorActive && (fcuShowHdg || apHeadingModeSelected);
+            const showSelectedHdg = SimVar.GetSimVarValue("L:A320_FCU_SHOW_SELECTED_HEADING", "number") === 1;
 
-            const selectedHeading = Simplane.getAutoPilotSelectedHeadingLockValue(false);
+            const selectedHeading = SimVar.GetSimVarValue("L:A32NX_AUTOPILOT_HEADING_SELECTED", "Degrees");
             const compass = SimVar.GetSimVarValue("PLANE HEADING DEGREES MAGNETIC", "degree");
             const xyz = Simplane.getOrientationAxis();
 

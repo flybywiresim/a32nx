@@ -333,18 +333,16 @@ class A32NX_FWC {
         // - Landing gear down
         // - Glide slope captured
         const landingGearIsDown = !SimVar.GetSimVarValue("IS GEAR RETRACTABLE", "Boolean") || SimVar.GetSimVarValue("GEAR HANDLE POSITION", "Boolean");
-        const glideSlopeCaptured = SimVar.GetSimVarValue("L:GLIDE_SLOPE_CAPTURED", "bool") === 1;
+        const verticalMode = SimVar.GetSimVarValue("L:A32NX_FMA_VERTICAL_MODE", "Number");
+        const glideSlopeCaptured = verticalMode >= 30 && verticalMode <= 34;
         if (landingGearIsDown || glideSlopeCaptured) {
             return;
         }
 
         // Use the constraint altitude if provided otherwise use selected altitude lock value
         const currentAltitudeConstraint = SimVar.GetSimVarValue("L:A32NX_AP_CSTN_ALT", "feet");
-        const currentFCUAltitude = SimVar.GetSimVarValue("L:HUD_AP_SELECTED_ALTITUDE", "Number");
+        const currentFCUAltitude = SimVar.GetSimVarValue("AUTOPILOT ALTITUDE LOCK VAR:3", "feet");
         const targetAltitude = currentAltitudeConstraint && !this.hasAltitudeConstraint() ? currentAltitudeConstraint : currentFCUAltitude;
-        if (currentFCUAltitude === 0) {
-            SimVar.SetSimVarValue("L:HUD_AP_SELECTED_ALTITUDE", "Number", 5000);
-        }
 
         // Exit when selected altitude is being changed
         if (this.previousTargetAltitude !== targetAltitude) {
@@ -380,7 +378,7 @@ class A32NX_FWC {
                 SimVar.SetSimVarValue("L:A32NX_ALT_DEVIATION", "Bool", false);
             }
         } else if (this._wasAboveThreshold && delta <= 750 && !this._wasReach200ft) {
-            if (!SimVar.GetSimVarValue("L:XMLVAR_Autopilot_1_Status", "Bool") && !SimVar.GetSimVarValue("L:XMLVAR_Autopilot_2_Status", "Bool")) {
+            if (!SimVar.GetSimVarValue("L:A32NX_AUTOPILOT_1_ACTIVE", "Bool") && !SimVar.GetSimVarValue("L:A32NX_AUTOPILOT_2_ACTIVE", "Bool")) {
                 SimVar.SetSimVarValue("L:A32NX_ALT_DEVIATION", "Bool", false);
                 SimVar.SetSimVarValue("L:A32NX_ALT_DEVIATION_SHORT", "Bool", true);
             }

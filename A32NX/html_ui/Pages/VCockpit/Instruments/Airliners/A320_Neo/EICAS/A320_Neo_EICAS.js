@@ -277,8 +277,8 @@ class A320_Neo_EICAS extends Airliners.BaseEICAS {
             this.CrzCondTimer = 60;
             this.pageNameWhenUnselected = "DOOR";
         } else if (engineOn && !ToPowerSet && Simplane.getIsGrounded() && this.minPageIndexWhenUnselected <= 1) {
-            const sidestickPosX = SimVar.GetSimVarValue("YOKE X POSITION", "Position");
-            const sidestickPosY = SimVar.GetSimVarValue("YOKE Y POSITION", "Position");
+            const sidestickPosX = SimVar.GetSimVarValue("L:A32NX_SIDESTICK_POSITION_X", "Number");
+            const sidestickPosY = SimVar.GetSimVarValue("L:A32NX_SIDESTICK_POSITION_Y", "Number");
             const rudderPos = SimVar.GetSimVarValue("RUDDER PEDAL POSITION", "Position");
             const controlsMoved = Math.abs(sidestickPosX) > 0.05 || Math.abs(sidestickPosY) > 0.05 || Math.abs(rudderPos) > 0.2;
 

@@ -255,7 +255,7 @@ class Jet_PFD_HSIndicator extends HTMLElement {
     updateRibbon() {
         const compass = SimVar.GetSimVarValue("PLANE HEADING DEGREES MAGNETIC", "degree");
         const trkfpaMode = SimVar.GetSimVarValue("L:A32NX_TRK_FPA_MODE_ACTIVE", "Bool");
-        const selectedHeading = trkfpaMode ? SimVar.GetSimVarValue("L:A32NX_AUTOPILOT_TRACK_SELECTED:1", "Degree") : SimVar.GetSimVarValue("AUTOPILOT HEADING LOCK DIR", "degree");
+        const selectedHeading = SimVar.GetSimVarValue("L:A32NX_AUTOPILOT_HEADING_SELECTED", "Degrees");
         const track = SimVar.GetSimVarValue("GPS GROUND MAGNETIC TRACK", "degree");
         if (this.graduations) {
             this.graduationScroller.scroll(compass);
@@ -275,8 +275,8 @@ class Jet_PFD_HSIndicator extends HTMLElement {
             }
         }
         if (this.selectedHeadingGroup) {
-            const autoPilotActive = Simplane.getAutoPilotHeadingSelected();
-            if (autoPilotActive) {
+            const showSelectedHeading = SimVar.GetSimVarValue("L:A320_FCU_SHOW_SELECTED_HEADING", "number") === 1;
+            if (showSelectedHeading) {
                 var delta = selectedHeading - compass;
                 if (delta > 180) {
                     delta = delta - 360;

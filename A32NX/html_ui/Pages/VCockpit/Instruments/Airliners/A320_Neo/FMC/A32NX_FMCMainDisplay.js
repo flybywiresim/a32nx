@@ -185,6 +185,8 @@ class FMCMainDisplay extends BaseAirliners {
 
         this.dataManager = new FMCDataManager(this);
 
+        this._flightGuidance = new NXFlightGuidance(this);
+
         this.tempCurve = new Avionics.Curve();
         this.tempCurve.interpolationFunction = Avionics.CurveTool.NumberInterpolation;
         this.tempCurve.add(-10 * 3.28084, 21.50);
@@ -302,6 +304,10 @@ class FMCMainDisplay extends BaseAirliners {
         this.updateGPSMessage();
 
         this.updateDisplayedConstraints();
+
+        if (this._flightGuidance) {
+            this._flightGuidance.update(_deltaTime);
+        }
     }
 
     //TODO: for independence introduce new simvar for current flight phase "L:A32NX_FLIGHT_PHASE_CURRENT"
