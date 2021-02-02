@@ -23,6 +23,15 @@ build_model() {
     node "${DIR}/../src/model/build.js"
 }
 
+build_fbw() {
+    "${DIR}/../src/fbw/build.sh"
+}
+
+build_fadec() {
+    #"${DIR}/../src/fadec/build.sh"
+    cp src/fadec/fadec.wasm A32NX/SimObjects/AirPlanes/Asobo_A320_NEO/panel/
+}
+
 build_manifests() {
     node "${DIR}/build.js"
 }
@@ -62,6 +71,8 @@ if [ -z "$1" ]; then
     build_behavior
     build_model
     build_systems
+    build_fbw
+    build_fadec
 else
     name="build_${1}"
     set -x

@@ -501,53 +501,22 @@
         </Component>
 
         <Component ID="Pedestal_Fwd">
-            <!-- TODO - Test this with new anim -->
-            <UseTemplate Name="FBW_ENGINE_Lever_Throttle_Template">
-                <ID>1</ID>
+            <UseTemplate Name="FBW_Throttle_Lever_Template">
                 <NODE_ID>LEVER_THROTTLE_1</NODE_ID>
                 <ANIM_NAME>throttle_lever_0</ANIM_NAME>
-                <ANIM_NAME_REVERSE_LOCK>LEVER_THROTTLE_1_LOCK</ANIM_NAME_REVERSE_LOCK>
-                <AIRBUS_TYPE/>
-                <DRAG_SPEED>-10</DRAG_SPEED>
-                <POSITION_TYPE>L</POSITION_TYPE>
-                <POSITION_VAR>XMLVAR_Throttle1Position</POSITION_VAR>
-                <TOOLTIPID>TT:COCKPIT.TOOLTIPS.ENG1_THROTTLE_CONTROL</TOOLTIPID>
+                <ID>1</ID>
             </UseTemplate>
-            <UseTemplate Name="FBW_ENGINE_Lever_Throttle_Template">
-                <ID>2</ID>
+            <UseTemplate Name="FBW_Throttle_Lever_Template">
                 <NODE_ID>LEVER_THROTTLE_2</NODE_ID>
                 <ANIM_NAME>throttle_lever_1</ANIM_NAME>
-                <ANIM_NAME_REVERSE_LOCK>LEVER_THROTTLE_2_LOCK</ANIM_NAME_REVERSE_LOCK>
-                <AIRBUS_TYPE/>
-                <DRAG_SPEED>-10</DRAG_SPEED>
-                <POSITION_TYPE>L</POSITION_TYPE>
-                <POSITION_VAR>XMLVAR_Throttle2Position</POSITION_VAR>
-                <TOOLTIPID>TT:COCKPIT.TOOLTIPS.ENG2_THROTTLE_CONTROL</TOOLTIPID>
+                <ID>2</ID>
             </UseTemplate>
-            <Component ID="Throttle_1_Visibility" Node="LEVER_THROTTLE_1">
-                <UseTemplate Name="ASOBO_GT_Visibility_Code">
-                    <VISIBILITY_CODE>(L:XMLVAR_LeverThrottleHidden1) !</VISIBILITY_CODE>
-                </UseTemplate>
-            </Component>
-            <Component ID="Throttle_2_Visibility" Node="LEVER_THROTTLE_2">
-                <UseTemplate Name="ASOBO_GT_Visibility_Code">
-                    <VISIBILITY_CODE>(L:XMLVAR_LeverThrottleHidden2) !</VISIBILITY_CODE>
-                </UseTemplate>
-            </Component>
 
-            <UseTemplate Name="ASOBO_AUTOPILOT_Push_AutoThrottle_Disengage_Template">
+            <UseTemplate Name="FBW_AutoThrottle_Instinctive_Disconnect_Template">
                 <NODE_ID>PUSH_THROTTLE_1</NODE_ID>
-                <PART_ID>Autothrottle_button</PART_ID>
-                <ANIM_NAME>PUSH_THROTTLE_1</ANIM_NAME>
-                <NO_INDICATOR>True</NO_INDICATOR>
-                <NO_TEXT_EMISSIVE>True</NO_TEXT_EMISSIVE>
             </UseTemplate>
-
-            <UseTemplate Name="ASOBO_AUTOPILOT_Push_AutoThrottle_Disengage_Template">
+            <UseTemplate Name="FBW_AutoThrottle_Instinctive_Disconnect_Template">
                 <NODE_ID>PUSH_THROTTLE_2</NODE_ID>
-                <ANIM_NAME>PUSH_THROTTLE_2</ANIM_NAME>
-                <NO_INDICATOR>True</NO_INDICATOR>
-                <NO_TEXT_EMISSIVE>True</NO_TEXT_EMISSIVE>
             </UseTemplate>
 
             <UseTemplate Name="ASOBO_HANDLING_Wheel_ElevatorTrim_Template">
@@ -557,8 +526,7 @@
                 <DOUBLE_WHEEL/>
                 <REPEAT_ANIM>5</REPEAT_ANIM>
                 <DRAG_AXIS_SCALE>20</DRAG_AXIS_SCALE>
-                <DRAG_MIN_VALUE>-4854</DRAG_MIN_VALUE>                <!-- Limit to -4.5 deg -->
-
+                <DRAG_MIN_VALUE>-4854</DRAG_MIN_VALUE>            <!-- Limit to -4.5 deg -->
             </UseTemplate>
 
             <UseTemplate Name="ASOBO_HANDLING_Indicator_ElevatorTrim_Template">
@@ -742,12 +710,13 @@
                 <ANIM_NAME>pedals_lever_l_r</ANIM_NAME>
                 <DONT_BRAKE_ON_PARKINGBRAKE>True</DONT_BRAKE_ON_PARKINGBRAKE>
             </UseTemplate>
-            <UseTemplate Name="ASOBO_HANDLING_Yoke_Template">
+            <!-- TODO -->
+            <UseTemplate Name="A32NX_Sidestick_Template">
                 <NODE_ID>YOKE_LEFT</NODE_ID>
                 <ANIM_NAME_YOKE_X>yoke_lever_stick1_l_r</ANIM_NAME_YOKE_X>
                 <ANIM_NAME_YOKE_Y>yoke_lever_stick_fore1_aft</ANIM_NAME_YOKE_Y>
             </UseTemplate>
-            <UseTemplate Name="ASOBO_HANDLING_Yoke_Template">
+            <UseTemplate Name="A32NX_Sidestick_Template">
                 <NODE_ID>YOKE_RIGHT</NODE_ID>
                 <ANIM_NAME_YOKE_X>yoke_lever_stick2_l_r</ANIM_NAME_YOKE_X>
                 <ANIM_NAME_YOKE_Y>yoke_lever_stick_fore2_aft</ANIM_NAME_YOKE_Y>
@@ -3264,7 +3233,7 @@
                 <TOOLTIPID>%((L:XMLVAR_Autopilot_2_Status, bool))%{if}TT:COCKPIT.TOOLTIPS.AUTOPILOT_PANEL_AP_ON%{else}TT:COCKPIT.TOOLTIPS.AUTOPILOT_PANEL_AP_OFF%{end}</TOOLTIPID>
             </UseTemplate>
 
-            <UseTemplate Name="ASOBO_AUTOPILOT_Push_AutoThrottle_Template">
+            <UseTemplate Name="FBW_Airbus_Autopilot_Push_Autothrust">
                 <NODE_ID>PUSH_AUTOPILOT_ATHR</NODE_ID>
                 <ANIM_NAME>PUSH_AUTOPILOT_ATHR</ANIM_NAME>
                 <POTENTIOMETER>84</POTENTIOMETER>

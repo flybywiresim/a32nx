@@ -343,12 +343,12 @@
 						<SWITCH_POSITION_VAR>XMLVAR_RudderTrim</SWITCH_POSITION_VAR>
 						<MOMENTARY_REPEAT_FREQUENCY>15</MOMENTARY_REPEAT_FREQUENCY>
 						<CODE_POS_0>
-							(A:AUTOPILOT MASTER, Bool) ! if{
+							(L:A32NX_AUTOPILOT_ACTIVE, Bool) ! if{
 								(&gt;K:RUDDER_TRIM_LEFT)
 							}
 						</CODE_POS_0>
 						<CODE_POS_2>
-							(A:AUTOPILOT MASTER, Bool) ! if{
+							(L:A32NX_AUTOPILOT_ACTIVE, Bool) ! if{
 								(&gt;K:RUDDER_TRIM_RIGHT)
 							}
 						</CODE_POS_2>

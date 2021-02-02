@@ -571,7 +571,7 @@ class A32NX_GPWS {
         switch (this.RetardState.value) {
             case "overRetard":
                 if (radioAlt < 20) {
-                    if (!SimVar.GetSimVarValue("AUTOPILOT MASTER", "Bool")) {
+                    if (!SimVar.GetSimVarValue("A32NX_AUTOPILOT_ACTIVE", "Bool")) {
                         this.RetardState.action("play");
                         this.core.soundManager.addPeriodicSound(soundList.retard, 1.1);
                     } else if (radioAlt < 10) {

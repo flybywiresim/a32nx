@@ -153,16 +153,16 @@ let A320_Neo_LowerECAM_FTCL;
             this.rudderRightMaxAngle.setAttribute("transform", `rotate(${26.4 * (1 - MaxAngleNorm)} 300 385)`);
 
             // Update ELAC's and SEC's
-            const elac1_On = SimVar.GetSimVarValue("FLY BY WIRE ELAC SWITCH:1", "boolean");
-            const elac2_On = SimVar.GetSimVarValue("FLY BY WIRE ELAC SWITCH:2", "boolean");
-            const elac1_Failed = SimVar.GetSimVarValue("FLY BY WIRE ELAC FAILED:1", "boolean");
-            const elac2_Failed = SimVar.GetSimVarValue("FLY BY WIRE ELAC FAILED:2", "boolean");
-            const sec1_On = SimVar.GetSimVarValue("FLY BY WIRE SEC SWITCH:1", "boolean");
-            const sec2_On = SimVar.GetSimVarValue("FLY BY WIRE SEC SWITCH:2", "boolean");
-            const sec3_On = SimVar.GetSimVarValue("FLY BY WIRE SEC SWITCH:3", "boolean");
-            const sec1_Failed = SimVar.GetSimVarValue("FLY BY WIRE SEC FAILED:1", "boolean");
-            const sec2_Failed = SimVar.GetSimVarValue("FLY BY WIRE SEC FAILED:2", "boolean");
-            const sec3_Failed = SimVar.GetSimVarValue("FLY BY WIRE SEC FAILED:3", "boolean");
+            const elac1_On = SimVar.GetSimVarValue("L:A32NX_FBW_ELAC_SWITCH:1", "boolean");
+            const elac2_On = SimVar.GetSimVarValue("L:A32NX_FBW_ELAC_SWITCH:2", "boolean");
+            const elac1_Failed = SimVar.GetSimVarValue("L:A32NX_FBW_ELAC_FAILED:1", "boolean");
+            const elac2_Failed = SimVar.GetSimVarValue("L:A32NX_FBW_ELAC_FAILED:2", "boolean");
+            const sec1_On = SimVar.GetSimVarValue("L:A32NX_FBW_SEC_SWITCH:1", "boolean");
+            const sec2_On = SimVar.GetSimVarValue("L:A32NX_FBW_SEC_SWITCH:2", "boolean");
+            const sec3_On = SimVar.GetSimVarValue("L:A32NX_FBW_SEC_SWITCH:3", "boolean");
+            const sec1_Failed = SimVar.GetSimVarValue("L:A32NX_FBW_SEC_FAILED:1", "boolean");
+            const sec2_Failed = SimVar.GetSimVarValue("L:A32NX_FBW_SEC_FAILED:2", "boolean");
+            const sec3_Failed = SimVar.GetSimVarValue("L:A32NX_FBW_SEC_FAILED:3", "boolean");
 
             if (elac1_On && !elac1_Failed) {
                 this.elac1Shape.setAttribute("class", "MainShape");
