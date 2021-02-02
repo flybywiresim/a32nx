@@ -742,12 +742,13 @@
                 <ANIM_NAME>pedals_lever_l_r</ANIM_NAME>
                 <DONT_BRAKE_ON_PARKINGBRAKE>True</DONT_BRAKE_ON_PARKINGBRAKE>
             </UseTemplate>
-            <UseTemplate Name="ASOBO_HANDLING_Yoke_Template">
+            <!-- TODO -->
+            <UseTemplate Name="A32NX_Sidestick_Template">
                 <NODE_ID>YOKE_LEFT</NODE_ID>
                 <ANIM_NAME_YOKE_X>yoke_lever_stick1_l_r</ANIM_NAME_YOKE_X>
                 <ANIM_NAME_YOKE_Y>yoke_lever_stick_fore1_aft</ANIM_NAME_YOKE_Y>
             </UseTemplate>
-            <UseTemplate Name="ASOBO_HANDLING_Yoke_Template">
+            <UseTemplate Name="A32NX_Sidestick_Template">
                 <NODE_ID>YOKE_RIGHT</NODE_ID>
                 <ANIM_NAME_YOKE_X>yoke_lever_stick2_l_r</ANIM_NAME_YOKE_X>
                 <ANIM_NAME_YOKE_Y>yoke_lever_stick_fore2_aft</ANIM_NAME_YOKE_Y>

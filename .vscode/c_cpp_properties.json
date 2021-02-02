@@ -1,0 +1,34 @@
+{
+    "configurations": [
+        {
+            "name": "WASM",
+            "includePath": [
+                "${MSFS_SDK}/WASM/include",
+                "${MSFS_SDK}/WASM/wasi-sysroot/include",
+                "${MSFS_SDK}/SimConnect SDK/include",
+                "${workspaceFolder}/src/fbw/src",
+                "${workspaceFolder}/src/fbw/src/inih",
+                "${workspaceFolder}/src/fbw/src/interface",
+                "${workspaceFolder}/src/fbw/src/model",
+                "${workspaceFolder}/src/fbw/src/zlib"
+              ],
+            "defines": [
+                "_MSFS_WASM=1",
+                "__wasi__",
+                "_LIBCPP_HAS_NO_THREADS",
+                "_WINDLL",
+                "_MBCS"
+            ],
+            "windowsSdkVersion": "10.0.18362.0",
+            "compilerPath": "${MSFS_SDK}/WASM/llvm/bin/clang-cl.exe",
+            "compilerArgs": [
+              "--sysroot ${MSFS_SDK}/WASM/wasi-sysroot",
+              "-target wasm32-unknown-wasi"
+            ],
+            "cStandard": "c17",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "msvc-x64"
+        }
+    ],
+    "version": 4
+}
