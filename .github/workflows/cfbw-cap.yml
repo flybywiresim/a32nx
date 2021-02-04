@@ -1,0 +1,45 @@
+name: autopilot
+on:
+  push:
+    branches:
+      - autopilot
+
+jobs:
+  build:
+    # Prevent running this on forks
+    if: github.repository_owner == 'flybywiresim'
+    runs-on: ubuntu-latest
+    env:
+      MASTER_ZIP_NAME: A32NX-master-cfbw-cap.zip
+      BUILD_DIR_NAME: vmaster-cfbw-cap
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v2
+      - name: Set BUILT_DATE_TIME
+        run: echo "BUILT_DATE_TIME=$(date -u -Iseconds)" >> $GITHUB_ENV
+      - name: Build A32NX
+        run: |
+          ./scripts/dev-env/run.sh ./scripts/setup.sh
+          ./scripts/dev-env/run.sh ./scripts/build.sh
+      - name: Build ZIP files
+        run: |
+          ./scripts/dev-env/run.sh node ./scripts/fragment.js
+
+          mkdir ./${{ env.BUILD_DIR_NAME }}
+          zip -r ./${{ env.BUILD_DIR_NAME }}/${{ env.MASTER_ZIP_NAME }} ./A32NX/
+      - name: Upload to Bunny CDN
+        env:
+          BUNNY_BUCKET_PASSWORD: ${{ secrets.BUNNY_BUCKET_PASSWORD }}
+          BUNNY_BUCKET_DESTINATION: addons/a32nx/cfbw-cap
+        run: ./scripts/cdn.sh $BUNNY_BUCKET_DESTINATION
+      - name: Upload to DigitalOcean CDN
+        uses: LibreTexts/do-space-sync-action@master
+        with:
+          args: --acl public-read
+        env:
+          SOURCE_DIR: ./${{ env.BUILD_DIR_NAME }}
+          DEST_DIR: ${{ env.BUILD_DIR_NAME }}
+          SPACE_NAME: ${{ secrets.CDN_SPACE_NAME }}
+          SPACE_REGION: ${{ secrets.CDN_SPACE_REGION }}
+          SPACE_ACCESS_KEY_ID: ${{ secrets.CDN_SPACE_ACCESS_KEY_ID }}
+          SPACE_SECRET_ACCESS_KEY: ${{ secrets.CDN_SPACE_SECRET_ACCESS_KEY }}
