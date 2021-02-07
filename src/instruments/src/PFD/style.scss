@@ -1,0 +1,215 @@
+@import "../Common/definitions";
+@import "animations";
+
+@font-face {
+  font-family: "Ecam";
+  //noinspection CssUnknownTarget
+  src: url("/fonts/ECAMFontRegular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+.pfd-svg {
+  position: absolute;
+  width: 1280px;
+  height: 1280px;
+
+  background: $display-background;
+
+  font-family: "Ecam", monospace !important;
+}
+
+.BarAmber {
+  fill: $display-amber;
+  stroke: $display-amber;
+  stroke-width: 0.13px;
+}
+.BarRed {
+  fill: $display-red;
+  stroke: $display-red;
+  stroke-width: 0.11px;
+}
+
+.NormalStroke {
+  stroke-width: 0.16mm;
+  stroke-linecap: round;
+}
+
+.ThickStroke {
+  stroke-width: 0.22mm;
+  stroke-linecap: round;
+}
+
+.HugeStroke {
+  stroke-width: 0.32mm;
+  stroke-linecap: round;
+}
+
+.SmallOutline {
+  stroke-width: 0.09mm;
+  stroke: $display-background !important;
+  paint-order: markers stroke fill;
+}
+.NormalOutline {
+  stroke-width: 0.22mm;
+  stroke: $display-background;
+  fill: none;
+  stroke-linecap: round;
+}
+.ThickOutline {
+  stroke-width: 0.3mm;
+  stroke: $display-background;
+  fill: none;
+  stroke-linecap: round;
+}
+.HugeOutline {
+  stroke-width: 0.4mm;
+  stroke: $display-background;
+  fill: none;
+  stroke-linecap: round;
+}
+
+.CornerRound {
+  stroke-linejoin: round;
+}
+
+.FontLargest {
+  font-size: 7px;
+}
+
+.FontLarge {
+  font-size: 6.5px;
+}
+
+.FontMedium {
+  font-size: 5.5px;
+}
+
+.FontSmall {
+  font-size: 5px;
+}
+
+.FontSmallest {
+  font-size: 4.5px;
+}
+
+.FontTiny {
+  font-size: 4px;
+}
+
+.StartAlign {
+  text-align: start;
+  text-anchor: start;
+}
+.MiddleAlign {
+  text-align: center;
+  text-anchor: middle;
+}
+.EndAlign {
+  text-align: end;
+  text-anchor: end;
+}
+
+.Magenta {
+  fill: none;
+  stroke: $display-magenta;
+}
+text.Magenta {
+  fill: $display-magenta;
+  stroke: none;
+}
+
+.Cyan {
+  fill: none;
+  stroke: $display-cyan;
+}
+text.Cyan {
+  fill: $display-cyan;
+  stroke: none;
+}
+tspan.Cyan {
+  fill: $display-cyan;
+  stroke: none;
+}
+
+.White {
+  fill: none;
+  stroke: $display-white;
+}
+.White.Fill {
+  fill: $display-white;
+  stroke: none;
+}
+text.White {
+  fill: $display-white;
+  stroke: none;
+}
+
+.Green {
+  stroke: $display-green;
+  fill: none;
+}
+text.Green {
+  fill: $display-green;
+  stroke: none;
+}
+
+.Amber {
+  stroke: $display-amber;
+  fill: none;
+}
+text.Amber {
+  fill: $display-amber;
+  stroke: none;
+}
+
+.Yellow {
+  stroke: $display-yellow;
+  fill: none;
+}
+.Yellow.Fill {
+  fill: $display-yellow;
+  stroke: none;
+}
+text.Yellow {
+  fill: $display-yellow;
+  stroke: none;
+}
+
+.Red {
+  stroke: $display-red;
+  fill: none;
+}
+.Red.Fill {
+  fill: $display-red;
+  stroke: none;
+}
+text.Red {
+  fill: $display-red;
+  stroke: none;
+}
+
+.Grey {
+  stroke: $display-grey;
+  fill: none;
+}
+
+.EarthFill {
+  fill: #9c480c;
+}
+.SkyFill {
+  fill: #0698ff;
+}
+.BlackFill {
+  fill: $display-background;
+}
+
+.TapeBackground {
+  fill: $display-grey;
+  stroke: none;
+}
+.BackgroundFill {
+  fill: $display-background;
+  stroke: none;
+  fill-rule: evenodd;
+}

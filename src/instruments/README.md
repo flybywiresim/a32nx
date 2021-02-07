@@ -15,7 +15,7 @@ To create a new instrument, create a folder in `/src/instruments/src`, with a `c
 Once you have your index file, you can import the render element target and start doing stuff with it:
 
 ```jsx
-import { renderTarget } from '../util.mjs';
+import { renderTarget } from '../util.js';
 
 // modify it manually...
 renderTarget.style.backgroundColor = 'red';

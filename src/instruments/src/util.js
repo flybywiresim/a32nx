@@ -115,3 +115,15 @@ export function useGlobalVar(name, type) {
 
     return value;
 }
+
+export const createDeltaTimeCalculator = (startTime = Date.now()) => {
+    let lastTime = startTime;
+
+    return () => {
+        const nowTime = Date.now();
+        const deltaTime = nowTime - lastTime;
+        lastTime = nowTime;
+
+        return deltaTime;
+    };
+};
