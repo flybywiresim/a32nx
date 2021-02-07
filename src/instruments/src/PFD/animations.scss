@@ -1,0 +1,52 @@
+@keyframes blinking {
+  0% {opacity: 0;}
+  50% {opacity: 0;}
+  51% {opacity: 1;}
+  100% {opacity: 1;}
+}
+
+@keyframes OuterMarkerAnim {
+  0%    {opacity: 0;}
+  33%   {opacity: 0;}
+  34%   {opacity: 1;}
+  100%  {opacity: 1;}
+}
+
+@keyframes MiddleMarkerAnim {
+  0%    {opacity: 0}
+  10%   {opacity: 0}
+  11%   {opacity: 1}
+  27%   {opacity: 1}
+  28%   {opacity: 0}
+  44%   {opacity: 0}
+  45%   {opacity: 1}
+  100%  {opacity: 1}
+}
+
+.BlinkInfinite {
+  animation-name: blinking;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+}
+
+.Blink9Seconds {
+  animation-name: blinking;
+  animation-duration: 1s;
+  animation-iteration-count: 9;
+}
+
+.OuterMarkerBlink {
+  animation-name: OuterMarkerAnim;
+  animation-duration: 460ms;
+  animation-iteration-count: infinite;
+}
+.MiddleMarkerBlink {
+  animation-name: MiddleMarkerAnim;
+  animation-duration: 730ms;
+  animation-iteration-count: infinite;
+}
+.InnerMarkerBlink {
+  animation-name: blinking;
+  animation-duration: 200ms;
+  animation-iteration-count: infinite;
+}

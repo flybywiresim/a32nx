@@ -45,6 +45,10 @@ module.exports = {
     ],
     // overrides airbnb, use sparingly
     rules: {
+        'no-bitwise': 'off',
+        'linebreak-style': 'off',
+        'no-mixed-operators': 'off',
+        'no-plusplus': 'off',
         'arrow-parens': ['error', 'always'],
         'brace-style': ['error', '1tbs', { allowSingleLine: false }],
         'class-methods-use-this': 'off',
