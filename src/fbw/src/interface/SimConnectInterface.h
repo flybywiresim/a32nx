@@ -146,7 +146,7 @@ class SimConnectInterface {
 
   void simConnectProcessEvent(const SIMCONNECT_RECV_EVENT* event);
 
-  void simConnectProcessSimObjectDataByType(const SIMCONNECT_RECV_SIMOBJECT_DATA_BYTYPE* data);
+  void simConnectProcessSimObjectData(const SIMCONNECT_RECV_SIMOBJECT_DATA* data);
 
   void simConnectProcessClientData(const SIMCONNECT_RECV_CLIENT_DATA* data);
 
