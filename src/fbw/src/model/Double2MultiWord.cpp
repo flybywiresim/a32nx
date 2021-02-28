@@ -6,15 +6,15 @@
 
 void Double2MultiWord(real_T u1, uint32_T y[], int32_T n)
 {
-  int32_T i;
-  int32_T currExp;
-  int32_T prevExp;
-  int32_T msl;
-  real_T yn;
   real_T yd;
-  boolean_T isNegative;
-  uint32_T u1i;
+  real_T yn;
+  int32_T currExp;
+  int32_T i;
+  int32_T msl;
+  int32_T prevExp;
   uint32_T cb;
+  uint32_T u1i;
+  boolean_T isNegative;
   isNegative = (u1 < 0.0);
   yn = frexp(u1, &currExp);
   msl = currExp <= 0 ? -1 : div_s32(currExp - 1, 32);

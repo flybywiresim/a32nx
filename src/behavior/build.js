@@ -20,7 +20,7 @@ function translate(filename) {
 
     Array.from(dom.window.document.querySelectorAll('[type="rnp"]'))
         .forEach((e) => {
-            const { messages, output } = rnp.translate(e.innerHTML, {
+            const { messages, output } = rnp.translate(e.textContent, {
                 specifier: '(inline)',
                 returnType: rnp.Type[(e.getAttribute('return') || 'void').toUpperCase()] || rnp.Type.VOID,
             });

@@ -98,6 +98,15 @@ struct SimData {
   unsigned long long gpsIsFlightPlanActive;
   double gpsWpCrossTrack;
   double gpsWpTrackAngleError;
+  double commanded_engine_N1_1_percent;
+  double commanded_engine_N1_2_percent;
+  double engine_N1_1_percent;
+  double engine_N1_2_percent;
+  double corrected_engine_N1_1_percent;
+  double corrected_engine_N1_2_percent;
+  unsigned long long engine_combustion_1;
+  unsigned long long engine_combustion_2;
+  unsigned long long is_mach_mode_active;
 };
 
 struct SimInput {
@@ -119,6 +128,7 @@ struct SimInputAutopilot {
 };
 
 struct SimInputThrottles {
+  double ATHR_push;
   double throttles[2];
 };
 
@@ -136,9 +146,20 @@ struct SimOutputZetaTrim {
   double zeta_trim_pos;
 };
 
+// GENERAL ENG THROTTLE MANAGED MODE:<1|2>
+// UNKNOWN  = 0
+// REVERSE  = 1
+// IDLE     = 2
+// AUTO     = 3
+// CLIMB    = 4
+// FLEX_MCT = 5
+// TOGA     = 6
+// HOLD     = 7
 struct SimOutputThrottles {
   double throttleLeverPosition_1;
   double throttleLeverPosition_2;
+  double throttleManagedMode_1;
+  double throttleManagedMode_2;
 };
 
 struct SimOutputEngineOverride {
@@ -175,6 +196,20 @@ struct ClientDataAutopilotLaws {
   double autopilotBeta;
 };
 
+struct ClientDataAutothrust {
+  double N1_TLA_1_percent;
+  double N1_TLA_2_percent;
+  double is_in_reverse_1;
+  double is_in_reverse_2;
+  double thrust_limit_type;
+  double thrust_limit_percent;
+  double N1_c_1_percent;
+  double N1_c_2_percent;
+  double status;
+  double mode;
+  double mode_message;
+};
+
 struct ClientDataLocalVariables {
   double flightPhase;
   double V2;
@@ -196,4 +231,28 @@ struct ClientDataLocalVariables {
   double flightManagementCrossTrackError;
   double flightManagementTrackAngleError;
   double flightManagementPhiCommand;
+};
+
+struct ClientDataLocalVariablesAutothrust {
+  double ATHR_push;
+  double TLA_1;
+  double TLA_2;
+  double V_c_kn;
+  double V_LS_kn;
+  double V_MAX_kn;
+  double thrust_limit_REV_percent;
+  double thrust_limit_IDLE_percent;
+  double thrust_limit_CLB_percent;
+  double thrust_limit_MCT_percent;
+  double thrust_limit_FLEX_percent;
+  double thrust_limit_TOGA_percent;
+  double flex_temperature_degC;
+  double mode_requested;
+  double is_mach_mode_active;
+  double alpha_floor_condition;
+  double is_approach_mode_active;
+  double is_SRS_TO_mode_active;
+  double is_SRS_GA_mode_active;
+  double thrust_reduction_altitude;
+  double thrust_reduction_altitude_go_around;
 };

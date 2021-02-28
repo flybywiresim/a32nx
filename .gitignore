@@ -32,6 +32,7 @@
 node_modules
 /src/sound/.cache
 /src/instruments/src/EFB/dist
+/src/autothrottle/target
 /A32NX/SimObjects/AirPlanes/Asobo_A320_NEO/model/*.gltf
 /A32NX/SimObjects/AirPlanes/Asobo_A320_NEO/model/*.bin
 *.wasm

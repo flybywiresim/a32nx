@@ -1,7 +1,7 @@
 #include "AutopilotLaws.h"
 #include "AutopilotLaws_private.h"
 
-Parameters_AutopilotLaws_T AutopilotLawsModelClass::AutopilotLaws_P = {
+AutopilotLawsModelClass::Parameters_AutopilotLaws_T AutopilotLawsModelClass::AutopilotLaws_P = {
 
   {
     {
@@ -30,22 +30,22 @@ Parameters_AutopilotLaws_T AutopilotLawsModelClass::AutopilotLaws_P = {
       0.0,
       0.0,
       0.0,
-      0,
+      false,
       0.0,
       0.0,
       0.0,
-      0,
+      false,
       0.0,
-      0,
-      0.0,
-      0.0,
-      0.0,
-      0.0,
+      false,
       0.0,
       0.0,
       0.0,
       0.0,
-      0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      false,
       0.0,
       0.0,
       0.0,
@@ -70,14 +70,14 @@ Parameters_AutopilotLaws_T AutopilotLawsModelClass::AutopilotLaws_P = {
       0.0,
       0.0,
       0.0,
-      0,
+      false,
       0.0,
       0.0,
       0.0,
       0.0,
       0.0,
       0.0,
-      0
+      false
     },
 
     {
@@ -237,7 +237,7 @@ Parameters_AutopilotLaws_T AutopilotLawsModelClass::AutopilotLaws_P = {
 
   1,
 
-  6.0,
+  -1.0,
 
   1.0,
 
@@ -245,31 +245,31 @@ Parameters_AutopilotLaws_T AutopilotLawsModelClass::AutopilotLaws_P = {
 
   0.0,
 
-  -1.0,
+  0.0,
+
+  0.0,
+
+  0.0,
+
+  0.0,
+
+  0.0,
+
+  0.0,
 
   1.0,
 
   -1.2,
 
-  0.0,
-
-  0.0,
-
-  0.0,
-
-  0.0,
-
-  0.0,
-
-  0.0,
+  -1.0,
 
   1.0,
 
   -1.0,
 
-  -1.0,
+  6.0,
 
-  8.0,
+  0.0,
 
   -80.0,
 
@@ -285,19 +285,21 @@ Parameters_AutopilotLaws_T AutopilotLawsModelClass::AutopilotLaws_P = {
 
   0.0,
 
-  0.35,
-
-  0.0,
-
   -2.5,
 
   0.0,
 
   0.0,
 
+  0.35,
+
+  0.0,
+
   -1.0,
 
   -1.0,
+
+  8.0,
 
   -1.0,
 
@@ -459,10 +461,6 @@ Parameters_AutopilotLaws_T AutopilotLawsModelClass::AutopilotLaws_P = {
 
   0.0,
 
-  0.0,
-
-  0.0,
-
   2.0,
 
   0.0,
@@ -497,7 +495,11 @@ Parameters_AutopilotLaws_T AutopilotLawsModelClass::AutopilotLaws_P = {
 
   0.0,
 
-  0.017453292519943295,
+  0.00508,
+
+  0.51444444444444448,
+
+  57.295779513082323,
 
   -1.0,
 
@@ -557,7 +559,11 @@ Parameters_AutopilotLaws_T AutopilotLawsModelClass::AutopilotLaws_P = {
 
   57.295779513082323,
 
-  0.017453292519943295,
+  0.00508,
+
+  0.51444444444444448,
+
+  57.295779513082323,
 
   -2.0,
 

@@ -1,7 +1,7 @@
 #include "FlyByWire.h"
 #include "FlyByWire_private.h"
 
-Parameters_FlyByWire_T FlyByWireModelClass::FlyByWire_P = {
+FlyByWireModelClass::Parameters_FlyByWire_T FlyByWireModelClass::FlyByWire_P = {
 
   {
     {
@@ -100,10 +100,10 @@ Parameters_FlyByWire_T FlyByWireModelClass::FlyByWire_P = {
         0.0,
         0.0,
         0.0,
-        0,
-        0,
+        false,
+        false,
         0.0,
-        0,
+        false,
         0.0,
         0.0,
         0.0,
@@ -142,7 +142,7 @@ Parameters_FlyByWire_T FlyByWireModelClass::FlyByWire_P = {
         0.0,
         0.0,
         0.0,
-        0,
+        false,
         0.0
       },
 
@@ -164,11 +164,11 @@ Parameters_FlyByWire_T FlyByWireModelClass::FlyByWire_P = {
     {
       0.0,
       0.0,
-      0,
+      false,
       0.0,
       0.0,
       0.0,
-      0
+      false
     }
   },
 
@@ -334,13 +334,7 @@ Parameters_FlyByWire_T FlyByWireModelClass::FlyByWire_P = {
 
   0.0,
 
-  0.0,
-
-  0.1,
-
-  0.0,
-
-  -0.8,
+  0.5,
 
   -15.0,
 
@@ -355,6 +349,14 @@ Parameters_FlyByWire_T FlyByWireModelClass::FlyByWire_P = {
 
 
   { -1.0, 0.0, 1.0 },
+
+  0.1,
+
+  0.0,
+
+  -0.8,
+
+  0.0,
 
   0.2,
 
@@ -380,11 +382,9 @@ Parameters_FlyByWire_T FlyByWireModelClass::FlyByWire_P = {
 
   { -1.0, 0.0, 1.0 },
 
-  0.5,
+  30.0,
 
   0.0,
-
-  30.0,
 
   0.0,
 

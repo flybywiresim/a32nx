@@ -27,66 +27,6 @@
 
 class SimConnectInterface {
  public:
-  SimConnectInterface() = default;
-
-  ~SimConnectInterface() = default;
-
-  bool connect(bool isThrottleHandlingEnabled,
-               double idleThrottleInput,
-               bool useReverseOnAxis,
-               bool autopilotStateMachineEnabled,
-               bool autopilotLawsEnabled,
-               bool flyByWireEnabled);
-
-  void disconnect();
-
-  bool requestReadData();
-
-  bool requestData();
-
-  bool readData();
-
-  bool sendData(SimOutput output);
-
-  bool sendData(SimOutputEtaTrim output);
-
-  bool sendData(SimOutputZetaTrim output);
-
-  bool sendData(SimOutputThrottles output);
-
-  bool sendData(SimOutputEngineOverride output);
-
-  bool sendAutoThrustArmEvent();
-
-  bool setClientDataLocalVariables(ClientDataLocalVariables output);
-
-  void resetSimInputAutopilot();
-
-  SimData getSimData();
-
-  SimInput getSimInput();
-
-  SimInputAutopilot getSimInputAutopilot();
-
-  SimInputThrottles getSimInputThrottles();
-
-  bool setClientDataAutopilotStateMachine(ClientDataAutopilotStateMachine output);
-  ClientDataAutopilotStateMachine getClientDataAutopilotStateMachine();
-
-  bool setClientDataAutopilotLaws(ClientDataAutopilotLaws output);
-  ClientDataAutopilotLaws getClientDataAutopilotLaws();
-
-  bool getIsAnyReverseToggleActive();
-  bool getIsReverseToggleActive(int index);
-  bool getIsAutothrottlesArmed();
-
- private:
-  enum ClientData {
-    AUTOPILOT_STATE_MACHINE,
-    AUTOPILOT_LAWS,
-    LOCAL_VARIABLES,
-  };
-
   enum Events {
     AXIS_ELEVATOR_SET,
     AXIS_AILERONS_SET,
@@ -154,6 +94,74 @@ class SimConnectInterface {
     THROTTLE_REVERSE_THRUST_HOLD,
   };
 
+  SimConnectInterface() = default;
+
+  ~SimConnectInterface() = default;
+
+  bool connect(bool isThrottleHandlingEnabled,
+               double idleThrottleInput,
+               bool useReverseOnAxis,
+               bool autopilotStateMachineEnabled,
+               bool autopilotLawsEnabled,
+               bool flyByWireEnabled);
+
+  void disconnect();
+
+  bool requestReadData();
+
+  bool requestData();
+
+  bool readData();
+
+  bool sendData(SimOutput output);
+
+  bool sendData(SimOutputEtaTrim output);
+
+  bool sendData(SimOutputZetaTrim output);
+
+  bool sendData(SimOutputThrottles output);
+
+  bool sendData(SimOutputEngineOverride output);
+
+  bool sendEvent(Events eventId);
+
+  bool setClientDataLocalVariables(ClientDataLocalVariables output);
+
+  bool setClientDataLocalVariablesAutothrust(ClientDataLocalVariablesAutothrust output);
+
+  void resetSimInputAutopilot();
+
+  void resetSimInputThrottles();
+
+  SimData getSimData();
+
+  SimInput getSimInput();
+
+  SimInputAutopilot getSimInputAutopilot();
+
+  SimInputThrottles getSimInputThrottles();
+
+  bool setClientDataAutopilotStateMachine(ClientDataAutopilotStateMachine output);
+  ClientDataAutopilotStateMachine getClientDataAutopilotStateMachine();
+
+  bool setClientDataAutopilotLaws(ClientDataAutopilotLaws output);
+  ClientDataAutopilotLaws getClientDataAutopilotLaws();
+
+  ClientDataAutothrust getClientDataAutothrust();
+
+  bool getIsAnyReverseToggleActive();
+  bool getIsReverseToggleActive(int index);
+  bool getIsAutothrottlesArmed();
+
+ private:
+  enum ClientData {
+    AUTOPILOT_STATE_MACHINE,
+    AUTOPILOT_LAWS,
+    AUTOTHRUST,
+    LOCAL_VARIABLES,
+    LOCAL_VARIABLES_AUTOTHRUST,
+  };
+
   bool isConnected = false;
   HANDLE hSimConnect = 0;
 
@@ -170,6 +178,7 @@ class SimConnectInterface {
 
   ClientDataAutopilotStateMachine clientDataAutopilotStateMachine = {};
   ClientDataAutopilotLaws clientDataAutopilotLaws = {};
+  ClientDataAutothrust clientDataAutothrust = {};
 
   bool prepareSimDataSimConnectDataDefinitions();
 

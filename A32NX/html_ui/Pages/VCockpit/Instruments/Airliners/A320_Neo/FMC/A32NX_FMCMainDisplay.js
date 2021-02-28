@@ -663,7 +663,7 @@ class FMCMainDisplay extends BaseAirliners {
                 console.log("Current Has Reached Flex = " + currentHasReachedFlex);
                 if (currentHasReachedFlex) {
                     if (!SimVar.GetSimVarValue("AUTOPILOT THROTTLE ARM", "boolean")) {
-                        SimVar.SetSimVarValue("K:AUTO_THROTTLE_ARM", "number", 1);
+                        //SimVar.SetSimVarValue("K:AUTO_THROTTLE_ARM", "number", 1);
                     }
                 }
             }

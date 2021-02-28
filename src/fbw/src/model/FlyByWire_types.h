@@ -1,6 +1,7 @@
 #ifndef RTW_HEADER_FlyByWire_types_h_
 #define RTW_HEADER_FlyByWire_types_h_
 #include "rtwtypes.h"
+
 #ifndef DEFINED_TYPEDEF_FOR_base_raw_time_
 #define DEFINED_TYPEDEF_FOR_base_raw_time_
 
@@ -370,8 +371,5 @@ typedef struct {
 } fbw_output;
 
 #endif
-
-typedef struct Parameters_FlyByWire_T_ Parameters_FlyByWire_T;
-
 #endif
 

@@ -77,6 +77,8 @@ clang++ \
   "${DIR}/src/model/AutopilotLaws.cpp" \
   "${DIR}/src/model/AutopilotStateMachine_data.cpp" \
   "${DIR}/src/model/AutopilotStateMachine.cpp" \
+  "${DIR}/src/model/Autothrust_data.cpp" \
+  "${DIR}/src/model/Autothrust.cpp" \
   "${DIR}/src/model/div_s32.cpp" \
   "${DIR}/src/model/Double2MultiWord.cpp" \
   "${DIR}/src/model/FlyByWire_data.cpp" \

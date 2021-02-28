@@ -187,6 +187,21 @@ void FlightDataRecorderConverter::writeHeader(ofstream& out, const string& delim
   out << "ap_law.autopilot.Theta_c_deg" << delimiter;
   out << "ap_law.autopilot.Phi_c_deg" << delimiter;
   out << "ap_law.autopilot.Beta_c_deg" << delimiter;
+  out << "athr.sim_throttle_lever_1_pos" << delimiter;
+  out << "athr.sim_throttle_lever_2_pos" << delimiter;
+  out << "athr.sim_thrust_mode_1" << delimiter;
+  out << "athr.sim_thrust_mode_2" << delimiter;
+  out << "athr.N1_TLA_1_percent" << delimiter;
+  out << "athr.N1_TLA_2_percent" << delimiter;
+  out << "athr.is_in_reverse_1)" << delimiter;
+  out << "athr.is_in_reverse_2)" << delimiter;
+  out << "athr.thrust_limit_type" << delimiter;
+  out << "athr.thrust_limit_percent" << delimiter;
+  out << "athr.N1_c_1_percent" << delimiter;
+  out << "athr.N1_c_2_percent" << delimiter;
+  out << "athr.status" << delimiter;
+  out << "athr.mode" << delimiter;
+  out << "athr.mode_message" << delimiter;
   out << "fbw.sim.time.monotonic_time" << delimiter;
   out << "fbw.sim.time.dt" << delimiter;
   out << "fbw.sim.time.simulation_time" << delimiter;
@@ -314,6 +329,7 @@ void FlightDataRecorderConverter::writeStruct(ofstream& out,
                                               const string& delimiter,
                                               const ap_sm_output& ap_sm,
                                               const ap_raw_output& ap_law,
+                                              const athr_output& athr,
                                               const fbw_output& fbw) {
   out << ap_sm.time.dt << delimiter;
   out << ap_sm.time.simulation_time << delimiter;
@@ -499,6 +515,21 @@ void FlightDataRecorderConverter::writeStruct(ofstream& out,
   out << ap_law.autopilot.Theta_c_deg << delimiter;
   out << ap_law.autopilot.Phi_c_deg << delimiter;
   out << ap_law.autopilot.Beta_c_deg << delimiter;
+  out << athr.sim_throttle_lever_1_pos << delimiter;
+  out << athr.sim_throttle_lever_2_pos << delimiter;
+  out << athr.sim_thrust_mode_1 << delimiter;
+  out << athr.sim_thrust_mode_2 << delimiter;
+  out << athr.N1_TLA_1_percent << delimiter;
+  out << athr.N1_TLA_2_percent << delimiter;
+  out << static_cast<unsigned int>(athr.is_in_reverse_1) << delimiter;
+  out << static_cast<unsigned int>(athr.is_in_reverse_2) << delimiter;
+  out << athr.thrust_limit_type << delimiter;
+  out << athr.thrust_limit_percent << delimiter;
+  out << athr.N1_c_1_percent << delimiter;
+  out << athr.N1_c_2_percent << delimiter;
+  out << athr.status << delimiter;
+  out << athr.mode << delimiter;
+  out << athr.mode_message << delimiter;
   out << fbw.sim.time.monotonic_time << delimiter;
   out << fbw.sim.time.dt << delimiter;
   out << fbw.sim.time.simulation_time << delimiter;

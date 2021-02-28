@@ -5,8 +5,8 @@
 real_T uMultiWord2Double(const uint32_T u1[], int32_T n1, int32_T e1)
 {
   real_T y;
-  int32_T i;
   int32_T exp_0;
+  int32_T i;
   y = 0.0;
   exp_0 = e1;
   for (i = 0; i < n1; i++) {

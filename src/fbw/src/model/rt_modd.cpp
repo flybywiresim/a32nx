@@ -5,9 +5,9 @@
 
 real_T rt_modd(real_T u0, real_T u1)
 {
+  real_T q;
   real_T y;
   boolean_T yEq;
-  real_T q;
   y = u0;
   if (u1 == 0.0) {
     if (u0 == 0.0) {

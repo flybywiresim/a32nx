@@ -1,6 +1,7 @@
 #ifndef RTW_HEADER_AutopilotLaws_types_h_
 #define RTW_HEADER_AutopilotLaws_types_h_
 #include "rtwtypes.h"
+
 #ifndef DEFINED_TYPEDEF_FOR_ap_raw_time_
 #define DEFINED_TYPEDEF_FOR_ap_raw_time_
 
@@ -203,50 +204,5 @@ typedef struct {
 } ap_output_law;
 
 #endif
-
-#ifndef struct_tag_skA4KFEZ4HPkJJBOYCrevdH
-#define struct_tag_skA4KFEZ4HPkJJBOYCrevdH
-
-struct tag_skA4KFEZ4HPkJJBOYCrevdH
-{
-  uint32_T SafeEq;
-  uint32_T Absolute;
-  uint32_T NaNBias;
-  uint32_T NaNWithFinite;
-  uint32_T FiniteWithNaN;
-  uint32_T NaNWithNaN;
-};
-
-#endif
-
-#ifndef typedef_skA4KFEZ4HPkJJBOYCrevdH_AutopilotLaws_T
-#define typedef_skA4KFEZ4HPkJJBOYCrevdH_AutopilotLaws_T
-
-typedef struct tag_skA4KFEZ4HPkJJBOYCrevdH skA4KFEZ4HPkJJBOYCrevdH_AutopilotLaws_T;
-
-#endif
-
-#ifndef struct_tag_sJCxfmxS8gBOONUZjbjUd9E
-#define struct_tag_sJCxfmxS8gBOONUZjbjUd9E
-
-struct tag_sJCxfmxS8gBOONUZjbjUd9E
-{
-  boolean_T CaseSensitivity;
-  boolean_T StructExpand;
-  char_T PartialMatching[6];
-  boolean_T IgnoreNulls;
-};
-
-#endif
-
-#ifndef typedef_sJCxfmxS8gBOONUZjbjUd9E_AutopilotLaws_T
-#define typedef_sJCxfmxS8gBOONUZjbjUd9E_AutopilotLaws_T
-
-typedef struct tag_sJCxfmxS8gBOONUZjbjUd9E sJCxfmxS8gBOONUZjbjUd9E_AutopilotLaws_T;
-
-#endif
-
-typedef struct Parameters_AutopilotLaws_T_ Parameters_AutopilotLaws_T;
-
 #endif
 

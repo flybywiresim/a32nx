@@ -1,7 +1,7 @@
 #ifndef RTW_HEADER_AutopilotStateMachine_types_h_
 #define RTW_HEADER_AutopilotStateMachine_types_h_
 #include "rtwtypes.h"
-#include "multiword_types.h"
+
 #ifndef DEFINED_TYPEDEF_FOR_ap_raw_time_
 #define DEFINED_TYPEDEF_FOR_ap_raw_time_
 
@@ -278,15 +278,15 @@ typedef enum {
 
 #endif
 
-#ifndef DEFINED_TYPEDEF_FOR_athr_mode_
-#define DEFINED_TYPEDEF_FOR_athr_mode_
+#ifndef DEFINED_TYPEDEF_FOR_athr_requested_mode_
+#define DEFINED_TYPEDEF_FOR_athr_requested_mode_
 
 typedef enum {
-  athr_mode_NONE = 0,
-  athr_mode_SPEED,
-  athr_mode_THRUST_IDLE,
-  athr_mode_THRUST_CLB
-} athr_mode;
+  athr_requested_mode_NONE = 0,
+  athr_requested_mode_SPEED,
+  athr_requested_mode_THRUST_IDLE,
+  athr_requested_mode_THRUST_CLB
+} athr_requested_mode;
 
 #endif
 
@@ -359,7 +359,7 @@ typedef struct {
 
 typedef struct {
   vertical_mode mode;
-  athr_mode mode_autothrust;
+  athr_requested_mode mode_autothrust;
   boolean_T mode_reversion;
   vertical_law law;
   real_T H_c_ft;
@@ -423,8 +423,5 @@ typedef struct {
 } ap_sm_output;
 
 #endif
-
-typedef struct Parameters_AutopilotStateMachine_T_ Parameters_AutopilotStateMachine_T;
-
 #endif
 

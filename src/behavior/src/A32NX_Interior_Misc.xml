@@ -626,4 +626,45 @@
             </UseTemplate>
         </Component>
     </Template>
+
+    <Template Name="FBW_Throttle_Lever_Template">
+        <DefaultTemplateParameters>
+            <PART_ID>ENGINE_Lever_Throttle</PART_ID>
+        </DefaultTemplateParameters>
+        <Component ID="#NODE_ID#" Node="#NODE_ID#">
+            <!-- REVERSER -->
+            <UseTemplate Name="ASOBO_GT_Anim_Code">
+                <ANIM_CODE>
+                    (L:A32NX_3D_THROTTLE_LEVER_POSITION_#ID#) 25 &lt; 100 *
+                </ANIM_CODE>
+				<ANIM_NAME>LEVER_THROTTLE_#ID#_LOCK</ANIM_NAME>
+			</UseTemplate>
+			<UseTemplate Name="ASOBO_GT_AnimTriggers_2SoundEvents">
+				<ANIM_NAME>LEVER_THROTTLE_#ID#_LOCK</ANIM_NAME>
+				<WWISE_EVENT_1>throttle_lever_lock_on</WWISE_EVENT_1>
+				<WWISE_EVENT_2>throttle_lever_lock_off</WWISE_EVENT_2>
+			</UseTemplate>
+
+            <!-- MAIN LEVER -->
+            <UseTemplate Name="ASOBO_GT_Anim_Code">
+                <ANIM_CODE>
+                    (L:A32NX_3D_THROTTLE_LEVER_POSITION_#ID#)
+                </ANIM_CODE>
+                <ANIM_NAME>#ANIM_NAME#</ANIM_NAME>
+            </UseTemplate>
+            <!-- TODO: sounds -->
+            <MouseRect>
+                <Cursor>Hand</Cursor>
+                <TooltipID>TT:COCKPIT.TOOLTIPS.ENG#ID#_THROTTLE_CONTROL</TooltipID>
+                <MouseFlags>LeftSingle+LeftDrag Wheel</MouseFlags>
+                <CallbackDragging>
+                    <MaxValue>16384</MaxValue>
+                    <MinValue>-16384</MinValue>
+                    <Variable>PROP RPM:#ID#</Variable> <!-- dump into unused aircraft var -->
+                    <Units>percent</Units>
+                    <EventID>THROTTLE#ID#_SET</EventID>
+                </CallbackDragging>
+            </MouseRect>
+        </Component>
+    </Template>
 </ModelBehaviors>

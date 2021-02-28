@@ -79,7 +79,7 @@ const Row3 = ({ isAttExcessive }) => (
 );
 
 const A1A2Cell = () => {
-    const AThrMode = getSimVar('L:A32NX_ThrustLimitMode', 'enum');
+    const AThrMode = getSimVar('L:A32NX_AUTOTHRUST_MODE', 'enum');
 
     let text;
 
@@ -185,7 +185,7 @@ const A1A2Cell = () => {
 };
 
 const A3Cell = () => {
-    const engineMessage = getSimVar('L:A32NX_Engine_Message', 'enum');
+    const engineMessage = getSimVar('L:A32NX_AUTOTHRUST_MODE_MESSAGE', 'enum');
 
     let text;
     let className;
@@ -638,19 +638,21 @@ const E2Cell = () => {
 };
 
 const E3Cell = () => {
-    const AThrArm = getSimVar('AUTOPILOT THROTTLE ARM', 'bool');
-    const AThrActive = getSimVar('AUTOPILOT MANAGED THROTTLE ACTIVE', 'bool');
+    const status = getSimVar('L:A32NX_AUTOTHRUST_STATUS', 'enum');
 
     let color;
     let id = 0;
-    if (!AThrArm && !AThrActive) {
-        return null;
-    } if (AThrArm && !AThrActive) {
+    switch (status) {
+    case 1:
         color = 'Cyan';
         id = 1;
-    } else if (AThrActive) {
+        break;
+    case 2:
         color = 'White';
         id = 2;
+        break;
+    default:
+        return null;
     }
 
     return (

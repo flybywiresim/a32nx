@@ -4,13 +4,14 @@
 real_T look2_binlxpw(real_T u0, real_T u1, const real_T bp0[], const real_T bp1[], const real_T table[], const uint32_T
                      maxIndex[], uint32_T stride)
 {
-  real_T frac;
-  uint32_T bpIndices[2];
   real_T fractions[2];
-  real_T yL_1d;
-  uint32_T iRght;
+  real_T frac;
+  real_T yL_0d0;
+  real_T yL_0d1;
+  uint32_T bpIndices[2];
   uint32_T bpIdx;
   uint32_T iLeft;
+  uint32_T iRght;
   if (u0 <= bp0[0U]) {
     iLeft = 0U;
     frac = (u0 - bp0[0U]) / (bp0[1U] - bp0[0U]);
@@ -60,7 +61,9 @@ real_T look2_binlxpw(real_T u0, real_T u1, const real_T bp0[], const real_T bp1[
   }
 
   bpIdx = iLeft * stride + bpIndices[0U];
-  yL_1d = (table[bpIdx + 1U] - table[bpIdx]) * fractions[0U] + table[bpIdx];
+  yL_0d0 = table[bpIdx];
+  yL_0d0 += (table[bpIdx + 1U] - yL_0d0) * fractions[0U];
   bpIdx += stride;
-  return (((table[bpIdx + 1U] - table[bpIdx]) * fractions[0U] + table[bpIdx]) - yL_1d) * frac + yL_1d;
+  yL_0d1 = table[bpIdx];
+  return (((table[bpIdx + 1U] - yL_0d1) * fractions[0U] + yL_0d1) - yL_0d0) * frac + yL_0d0;
 }
