@@ -294,9 +294,6 @@ bool SimConnectInterface::prepareSimOutputSimConnectDataDefinitions() {
   result &=
       addDataDefinition(hSimConnect, 4, SIMCONNECT_DATATYPE_FLOAT64, "GENERAL ENG THROTTLE MANAGED MODE:2", "NUMBER");
 
-  result &= addDataDefinition(hSimConnect, 5, SIMCONNECT_DATATYPE_FLOAT64, "TURB ENG CORRECTED N1:1", "PERCENT");
-  result &= addDataDefinition(hSimConnect, 5, SIMCONNECT_DATATYPE_FLOAT64, "TURB ENG CORRECTED N1:2", "PERCENT");
-
   return result;
 }
 
@@ -599,11 +596,6 @@ bool SimConnectInterface::sendData(SimOutputZetaTrim output) {
 bool SimConnectInterface::sendData(SimOutputThrottles output) {
   // write data and return result
   return sendData(4, sizeof(output), &output);
-}
-
-bool SimConnectInterface::sendData(SimOutputEngineOverride output) {
-  // write data and return result
-  return sendData(5, sizeof(output), &output);
 }
 
 bool SimConnectInterface::sendEvent(Events eventId) {

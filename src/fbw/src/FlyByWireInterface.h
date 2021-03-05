@@ -65,7 +65,6 @@ class FlyByWireInterface {
   bool autopilotLawsEnabled = false;
   bool flyByWireEnabled = false;
   bool autoThrustEnabled = false;
-  bool autoThrustWorkaroundEnabled = false;
 
   bool pauseDetected = false;
 
@@ -89,9 +88,6 @@ class FlyByWireInterface {
   athr_output autoThrustOutput;
 
   InterpolatingLookupTable throttleLookupTable;
-
-  RateLimiter rateLimiterEngine_1;
-  RateLimiter rateLimiterEngine_2;
 
   ID idSideStickPositionX;
   ID idSideStickPositionY;

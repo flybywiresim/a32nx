@@ -162,11 +162,6 @@ struct SimOutputThrottles {
   double throttleManagedMode_2;
 };
 
-struct SimOutputEngineOverride {
-  double engine_n1_1;
-  double engine_n1_2;
-};
-
 struct ClientDataAutopilotStateMachine {
   unsigned long long enabled_AP1;
   unsigned long long enabled_AP2;

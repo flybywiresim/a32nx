@@ -29,10 +29,6 @@ bool FlyByWireInterface::connect() {
   // setup local variables
   setupLocalVariables();
 
-  // set rate for throttle override
-  rateLimiterEngine_1.setRate(3);
-  rateLimiterEngine_2.setRate(3);
-
   // initialize throttle system
   initializeThrottles();
 
@@ -299,27 +295,6 @@ bool FlyByWireInterface::updateAutopilotStateMachine(double sampleTime) {
 
   // update autothrust mode -------------------------------------------------------------------------------------------
   set_named_variable_value(idAutopilotAutothrustMode, autopilotStateMachineOutput.autothrust_mode);
-
-  if (autoThrustWorkaroundEnabled && simData.isAutoThrottleActive) {
-    if (autopilotStateMachineOutput.autothrust_mode == 2) {
-      // IDLE
-      rateLimiterEngine_1.update(25, sampleTime);
-      rateLimiterEngine_2.update(25, sampleTime);
-      SimOutputEngineOverride override = {rateLimiterEngine_1.getValue(), rateLimiterEngine_2.getValue()};
-      simConnectInterface.sendData(override);
-    } else if (autopilotStateMachineOutput.autothrust_mode == 3) {
-      // CLB
-      double target = min(95, 80 + ((15.0 / 30000.0) * simData.H_ft));
-      rateLimiterEngine_1.update(target, sampleTime);
-      rateLimiterEngine_2.update(target, sampleTime);
-      SimOutputEngineOverride override = {rateLimiterEngine_1.getValue(), rateLimiterEngine_2.getValue()};
-      simConnectInterface.sendData(override);
-    } else {
-      // NONE or SPEED (in our case -> tracking mode)
-      rateLimiterEngine_1.reset(simData.engine_n1_1);
-      rateLimiterEngine_2.reset(simData.engine_n1_2);
-    }
-  }
 
   // update FMA variables ---------------------------------------------------------------------------------------------
   set_named_variable_value(idFmaLateralMode, autopilotStateMachineOutput.lateral_mode);
@@ -764,9 +739,9 @@ void FlyByWireInterface::loadConfiguration() {
   flightDirectorSmoothingEnabled = configuration.GetBoolean("Autopilot", "FlightDirectorSmoothingEnabled", true);
   flightDirectorSmoothingFactor = configuration.GetReal("Autopilot", "FlightDirectorSmoothingFactor", 2.5);
   flightDirectorSmoothingLimit = configuration.GetReal("Autopilot", "FlightDirectorSmoothingLimit", 20);
-  autoThrustWorkaroundEnabled = configuration.GetBoolean("Autopilot", "AutoThrustWorkaroundEnabled", true);
   std::cout << "WASM: Model Configuration : AutopilotStateMachineEnabled = " << autopilotStateMachineEnabled << endl;
   std::cout << "WASM: Model Configuration : AutopilotLawsEnabled         = " << autopilotLawsEnabled << endl;
+  std::cout << "WASM: Model Configuration : AutoThrustEnabled            = " << autoThrustEnabled << endl;
   std::cout << "WASM: Model Configuration : FlyByWireEnabled             = " << flyByWireEnabled << endl;
   std::cout << "WASM: Autopilot Configuration : CustomFlightGuidanceEnabled = " << customFlightGuidanceEnabled << endl;
   std::cout << "WASM: Autopilot Configuration : FlightDirectorSmoothingEnabled = " << flightDirectorSmoothingEnabled
@@ -775,7 +750,6 @@ void FlyByWireInterface::loadConfiguration() {
             << endl;
   std::cout << "WASM: Autopilot Configuration : FlightDirectorSmoothingLimit = " << flightDirectorSmoothingLimit
             << endl;
-  std::cout << "WASM: Autopilot Configuration : AutoThrustWorkaroundEnabled = " << autoThrustWorkaroundEnabled << endl;
 }
 
 void FlyByWireInterface::initializeThrottles() {

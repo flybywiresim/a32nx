@@ -121,8 +121,6 @@ class SimConnectInterface {
 
   bool sendData(SimOutputThrottles output);
 
-  bool sendData(SimOutputEngineOverride output);
-
   bool sendEvent(Events eventId);
 
   bool setClientDataLocalVariables(ClientDataLocalVariables output);
