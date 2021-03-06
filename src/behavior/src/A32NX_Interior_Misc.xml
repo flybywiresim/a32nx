@@ -641,8 +641,8 @@
 			</UseTemplate>
 			<UseTemplate Name="ASOBO_GT_AnimTriggers_2SoundEvents">
 				<ANIM_NAME>LEVER_THROTTLE_#ID#_LOCK</ANIM_NAME>
-				<WWISE_EVENT_1>throttle_lever_lock_on</WWISE_EVENT_1>
-				<WWISE_EVENT_2>throttle_lever_lock_off</WWISE_EVENT_2>
+				<WWISE_EVENT_1>detent</WWISE_EVENT_1>
+				<WWISE_EVENT_2>detent</WWISE_EVENT_2>
 			</UseTemplate>
 
             <!-- MAIN LEVER -->

@@ -42,8 +42,7 @@
 - :x: N1 thrust limit displayed and achieved may differ
 - :x: FLEX thrust limit is MCT limit whatever temperature you use
 - :x: Thrust limits are preliminary and not finished, they could be sometimes way off
-- :x: SPD/MACH hold might not perform satisfying in all situations yet
-- :x: throttle detent sounds are missing
+- :x: SPD/MACH hold might not perform correctly in all situations yet
 
 #### First implementation available
 

@@ -1282,31 +1282,31 @@
             <WwiseRTPC LocalVar="XMLVAR_Throttle2Position" RTPCName="LOCALVAR_GENERAL_ENG_THROTTLE2_LEVER_POSITION" />
         </Sound>
 
-        <Sound WwiseData="true" WwiseEvent="detent" Continuous="false" ViewPoint="Inside" NodeName="LEVER_THROTTLE_1" LocalVar="XMLVAR_Throttle1Position">
-            <Range LowerBound="2.9" UpperBound="3.1" />
+        <Sound WwiseData="true" WwiseEvent="detent" Continuous="false" ViewPoint="Inside" NodeName="LEVER_THROTTLE_1" LocalVar="A32NX_3D_THROTTLE_LEVER_POSITION_1" Units="PERCENT">
+            <Range LowerBound="73" UpperBound="77" />
         </Sound>
 
-        <Sound WwiseData="true" WwiseEvent="detent" Continuous="false" ViewPoint="Inside" NodeName="LEVER_THROTTLE_2" LocalVar="XMLVAR_Throttle2Position">
-            <Range LowerBound="2.9" UpperBound="3.1" />
+        <Sound WwiseData="true" WwiseEvent="detent" Continuous="false" ViewPoint="Inside" NodeName="LEVER_THROTTLE_2" LocalVar="A32NX_3D_THROTTLE_LEVER_POSITION_2" Units="PERCENT">
+            <Range LowerBound="73" UpperBound="77" />
         </Sound>
 
-        <Sound WwiseData="true" WwiseEvent="TOGAdetent" Continuous="false" ViewPoint="Inside" NodeName="LEVER_THROTTLE_1" LocalVar="XMLVAR_Throttle1Position">
-            <Range LowerBound="1.9" UpperBound="2.1" />
+        <Sound WwiseData="true" WwiseEvent="TOGAdetent" Continuous="false" ViewPoint="Inside" NodeName="LEVER_THROTTLE_1" LocalVar="A32NX_3D_THROTTLE_LEVER_POSITION_1" Units="PERCENT">
+            <Range LowerBound="48" UpperBound="52" />
         </Sound>
 
-        <Sound WwiseData="true" WwiseEvent="TOGAdetent" Continuous="false" ViewPoint="Inside" NodeName="LEVER_THROTTLE_2" LocalVar="XMLVAR_Throttle2Position">
-            <Range LowerBound="1.9" UpperBound="2.1" />
+        <Sound WwiseData="true" WwiseEvent="TOGAdetent" Continuous="false" ViewPoint="Inside" NodeName="LEVER_THROTTLE_2" LocalVar="A32NX_3D_THROTTLE_LEVER_POSITION_2" Units="PERCENT">
+            <Range LowerBound="48" UpperBound="52" />
         </Sound>
 
-        <Sound WwiseData="true" WwiseEvent="IdleDetent" Continuous="false" ViewPoint="Inside" NodeName="LEVER_THROTTLE_1" LocalVar="XMLVAR_Throttle1Position">
-            <Range LowerBound="0.9" UpperBound="1.1" />
-            <Range LowerBound="3.9" />
+        <Sound WwiseData="true" WwiseEvent="IdleDetent" Continuous="false" ViewPoint="Inside" NodeName="LEVER_THROTTLE_1" LocalVar="A32NX_3D_THROTTLE_LEVER_POSITION_1" Units="PERCENT">
+            <Range LowerBound="23" UpperBound="27" />
+            <Range LowerBound="98" />
             <Range UpperBound="0" />
         </Sound>
 
-        <Sound WwiseData="true" WwiseEvent="IdleDetent" Continuous="false" ViewPoint="Inside" NodeName="LEVER_THROTTLE_2" LocalVar="XMLVAR_Throttle2Position">
-            <Range LowerBound="0.9" UpperBound="1.1" />
-            <Range LowerBound="3.9" />
+        <Sound WwiseData="true" WwiseEvent="IdleDetent" Continuous="false" ViewPoint="Inside" NodeName="LEVER_THROTTLE_2" LocalVar="A32NX_3D_THROTTLE_LEVER_POSITION_2" Units="PERCENT">
+            <Range LowerBound="23" UpperBound="27" />
+            <Range LowerBound="98" />
             <Range UpperBound="0" />
         </Sound>
 
@@ -1432,7 +1432,7 @@
                 <Range LowerBound="28" />
             </Requires>
         </Sound>
-        
+
         <!-- Altitude deviation warning =====================================================================-->
 
         <Sound WwiseData="true" WwiseEvent="cchordloop" NodeName="PEDALS_LEFT" ViewPoint="Inside" LocalVar="A32NX_ALT_DEVIATION" Continuous="true">
