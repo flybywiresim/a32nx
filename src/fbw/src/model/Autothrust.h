@@ -9,9 +9,11 @@ class AutothrustModelClass {
   typedef struct {
     real_T Delay_DSTATE;
     real_T Delay_DSTATE_g;
+    real_T Delay_DSTATE_l;
+    real_T Delay1_DSTATE;
     real_T Delay_DSTATE_k;
     real_T Delay_DSTATE_n;
-    real_T Delay_DSTATE_l;
+    real_T Delay_DSTATE_l2;
     real_T Delay_DSTATE_lz;
     real_T Delay_DSTATE_h;
     real_T prev_TLA_1;
@@ -54,6 +56,7 @@ class AutothrustModelClass {
     real_T ScheduledGain2_BreakpointsForDimension1[2];
     real_T ScheduledGain1_BreakpointsForDimension1[2];
     real_T ScheduledGain_BreakpointsForDimension1[2];
+    real_T LagFilter_C1;
     real_T DiscreteDerivativeVariableTs_Gain;
     real_T DiscreteTimeIntegratorVariableTsLimit_Gain;
     real_T DiscreteTimeIntegratorVariableTs_Gain;
@@ -106,7 +109,10 @@ class AutothrustModelClass {
     real_T Gain1_Gain_c;
     real_T Gain_Gain_h;
     real_T Gain_Gain_b;
+    real_T Delay_InitialCondition;
     real_T Constant_Value;
+    real_T Delay1_InitialCondition;
+    real_T Constant_Value_g;
     real_T Gain_Gain_p4;
     real_T Gain_Gain_d;
     real_T Gain1_Gain_h;
@@ -116,7 +122,7 @@ class AutothrustModelClass {
     uint32_T MAXIMUMCONTINUOUS_maxIndex[2];
     uint32_T MAXIMUMTAKEOFF_maxIndex[2];
     boolean_T Logic_table[16];
-    boolean_T Delay_InitialCondition;
+    boolean_T Delay_InitialCondition_a;
     boolean_T Logic_table_g[16];
   };
 
