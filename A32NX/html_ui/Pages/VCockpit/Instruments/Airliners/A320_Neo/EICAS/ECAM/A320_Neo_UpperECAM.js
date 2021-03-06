@@ -2309,55 +2309,38 @@ var A320_Neo_UpperECAM;
             super.update(_deltaTime);
 
             if ((SimVar.GetSimVarValue("L:A32NX_FADEC_POWERED_ENG1", "Bool") == 1) || (SimVar.GetSimVarValue("L:A32NX_FADEC_POWERED_ENG2", "Bool") == 1)) {
-                // MaxThrust seems to be bugged, so here we use the throttle position for now
-                const throttlePosition = Math.max(Simplane.getEngineThrottle(1), Simplane.getEngineThrottle(2));
                 const onGround = Simplane.getIsGrounded();
-                // Engine Mode START
-                if ((!Simplane.getEngineActive(0) || !Simplane.getEngineActive(1)) && onGround) {
-                    if (!this.currentStart || throttlePosition !== this.currentThrottleValue) {
-                        this.currentStart = true;
-                        this.currentThrottleValue = throttlePosition;
+                const thrustLimitType = SimVar.GetSimVarValue("L:A32NX_AUTOTHRUST_THRUST_LIMIT_TYPE", "number");
+                const thrustLimit = SimVar.GetSimVarValue("L:A32NX_AUTOTHRUST_THRUST_LIMIT", "number");
+                let throttleMode = ThrottleMode.UNKNOWN;
+                switch (thrustLimitType) {
+                    case 1:
+                        throttleMode = ThrottleMode.CLIMB;
                         this.setFlexTemperature(false);
-                        this.throttleState.className = "active";
-                        this.throttleValue.className = "active";
-                        this.throttleState.textContent = "CLB";
-                        this.throttleState.style.visibility = "visible";
-                        this.throttleValue.style.visibility = "visible";
-                        this.throttleValue.textContent = throttlePosition.toFixed(1);
-                    }
-                } else {
-                    const thrustLimitType = SimVar.GetSimVarValue("L:A32NX_AUTOTHRUST_THRUST_LIMIT_TYPE", "number");
-                    const thrustLimit = SimVar.GetSimVarValue("L:A32NX_AUTOTHRUST_THRUST_LIMIT", "number");
-                    let throttleMode = ThrottleMode.UNKNOWN;
-                    switch (thrustLimitType) {
-                        case 1:
-                            throttleMode = ThrottleMode.CLIMB;
-                            this.setFlexTemperature(false);
-                            break;
-                        case 2:
-                            throttleMode = ThrottleMode.FLEX_MCT;
-                            this.setFlexTemperature(false);
-                            break;
-                        case 3:
-                            throttleMode = ThrottleMode.FLEX_MCT;
-                            const flexTemp = Simplane.getFlexTemperature();
-                            this.setFlexTemperature(flexTemp !== 0, flexTemp);
-                            break;
-                        case 4:
-                            throttleMode = ThrottleMode.TOGA;
-                            this.setFlexTemperature(false);
-                            break;
-                        case 5:
-                            throttleMode = ThrottleMode.REVERSE;
-                            this.setFlexTemperature(false);
-                            break;
-                        default:
-                            throttleMode = ThrottleMode.UNKNOWN;
-                            this.setFlexTemperature(false);
-                            break;
-                    }
-                    this.setThrottle(true, thrustLimit, throttleMode, onGround, Simplane.getCurrentFlightPhase());
+                        break;
+                    case 2:
+                        throttleMode = ThrottleMode.FLEX_MCT;
+                        this.setFlexTemperature(false);
+                        break;
+                    case 3:
+                        throttleMode = ThrottleMode.FLEX_MCT;
+                        const flexTemp = Simplane.getFlexTemperature();
+                        this.setFlexTemperature(flexTemp !== 0, flexTemp);
+                        break;
+                    case 4:
+                        throttleMode = ThrottleMode.TOGA;
+                        this.setFlexTemperature(false);
+                        break;
+                    case 5:
+                        throttleMode = ThrottleMode.REVERSE;
+                        this.setFlexTemperature(false);
+                        break;
+                    default:
+                        throttleMode = ThrottleMode.UNKNOWN;
+                        this.setFlexTemperature(false);
+                        break;
                 }
+                this.setThrottle(true, thrustLimit, throttleMode, onGround, Simplane.getCurrentFlightPhase());
             } else {
                 this.setThrottle(false);
                 this.setFlexTemperature(false);
