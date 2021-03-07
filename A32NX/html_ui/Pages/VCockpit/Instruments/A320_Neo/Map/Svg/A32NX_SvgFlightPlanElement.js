@@ -96,71 +96,59 @@ class SvgFlightPlanElement extends SvgMapElement {
         this._highlightedLegIndex = SimVar.GetSimVarValue("L:MAP_FLIGHTPLAN_HIGHLIT_WAYPOINT", "number");
         this.points = [];
 
-        const paths = this.source.getSegments().map(segments => this.makePathFromSegments(segments, map));
+        const geometry = this.source.getActiveLegPathGeometry();
+        const paths = geometry ? [this.makePathFromGeometry(geometry, map)] : [];
         paths.forEach((path, index) => this.makeOrUpdatePathElement(path, index, map));
         this.removeTrailingPathElements(paths.length);
-
-        const ppos = new LatLong(
-            SimVar.GetSimVarValue("PLANE LATITUDE", "degree latitude"),
-            SimVar.GetSimVarValue("PLANE LONGITUDE", "degree longitude"),
-            0,
-        );
-
-        const allSegments = this.source.getSegments();
-        let final = [];
-        const nestedAbeam = allSegments.map(s => s.filter(x => x.isAbeam(ppos)));
-        for (const i of nestedAbeam) {
-            final = final.concat(i);
-        }
-
-        const abeam = final.map(s => this.makePathFromSegments([s], map));
-        abeam.forEach((path, index) => this.makeOrUpdatePathElementAbeam(path, index, map));
-        this.removeTrailingPathElementsAbeam(abeam.length);
     }
 
     /**
-     * @param segments {Segment[]}
+     *
+     * @param geometry {Geometry}
      * @param map
      */
-    makePathFromSegments(segments, map) {
-        //const points = [];
-        //const arcs = [];
+    makePathFromGeometry(geometry, map) {
+        const path = [];
 
-        const pathParts = [];
+        const { x: fromX, y: fromY } = map.coordinatesToXY(geometry.activeLeg.from.infos.coordinates);
+        const p1x = fastToFixed(fromX, 1);
+        const p1y = fastToFixed(fromY, 1);
+        path.push(`M ${p1x} ${p1y}`);
 
-        for (const segment of segments) {
-            if (!pathParts.length) {
-                const { x: fromX, y: fromY } = map.coordinatesToXY(segment.from);
-                const p1x = fastToFixed(fromX, 1);
-                const p1y = fastToFixed(fromY, 1);
-                pathParts.push(`M ${p1x} ${p1y}`);
-            }
+        if (geometry.transitions.length) {
+            const transition = geometry.transitions[0];
+            const [inbound, outbound] = transition.getTurningPoints();
 
-            switch (segment.type) {
-                case "straightTrack":
-                {
-                    const { x: toX, y: toY } = map.coordinatesToXY(segment.to);
-                    const p2x = fastToFixed(toX, 1);
-                    const p2y = fastToFixed(toY, 1);
-                    pathParts.push(`L ${p2x} ${p2y}`);
-                    break;
-                }
-                case "turn":
-                {
-                    const r = fastToFixed(segment.radius * map.NMToPixels(1), 0);
-                    const { x: toX, y: toY } = map.coordinatesToXY(segment.to);
+            const { x: inbndX, y: inbndY } = map.coordinatesToXY(inbound);
+            const p2x = fastToFixed(inbndX, 1);
+            const p2y = fastToFixed(inbndY, 1);
+            path.push(`L ${p2x} ${p2y}`);
 
-                    const p2x = fastToFixed(toX, 1);
-                    const p2y = fastToFixed(toY, 1);
-                    const cw = segment.clockwise;
+            const r = fastToFixed(transition.radius * map.NMToPixels(1), 0);
+            const { x: outbndX, y: outbndY } = map.coordinatesToXY(outbound);
 
-                    pathParts.push(`A ${r} ${r} 0 0 ${cw ? 1 : 0} ${p2x} ${p2y}`);
-                    break;
-                }
-            }
+            const p3x = fastToFixed(outbndX, 1);
+            const p3y = fastToFixed(outbndY, 1);
+            const cw = transition.clockwise;
+
+            path.push(`A ${r} ${r} 0 0 ${cw ? 1 : 0} ${p3x} ${p3y}`);
+
+            const { x: cX, y: cY } = map.coordinatesToXY(transition.center);
+            const pcx = fastToFixed(cX, 1);
+            const pcy = fastToFixed(cY, 1);
+
+            //path.push(`L ${pcx} ${pcy}`);
+            //path.push(`L ${p3x} ${p3y}`);
         }
 
-        return pathParts.join(" ");
+        if (geometry.nextLeg) {
+            const { x: toX, y: toY } = map.coordinatesToXY(geometry.nextLeg.to.infos.coordinates);
+            const p4x = fastToFixed(toX, 1);
+            const p4y = fastToFixed(toY, 1);
+            path.push(`L ${p4x} ${p4y}`);
+        }
+
+        return path.join(" ");
     }
 
     /**
@@ -208,45 +196,6 @@ class SvgFlightPlanElement extends SvgMapElement {
             existingElement.remove();
             i++;
             existingElement = document.getElementById(`flight-plan-segment-${i}`);
-        }
-    }
-
-    makeOrUpdatePathElementAbeam(pathString, index, map) {
-        const existingElement = document.getElementById(`flight-plan-abeam-${index}`);
-
-        if (existingElement) {
-            if (existingElement.getAttribute("d") !== pathString) {
-                existingElement.setAttribute("d", pathString);
-            }
-        } else {
-            const newElement = document.createElementNS(Avionics.SVG.NS, "path");
-
-            newElement.setAttribute("id", `flight-plan-abeam-${index}`);
-            newElement.setAttribute("d", pathString);
-
-            newElement.setAttribute("stroke", "red");
-
-            newElement.setAttribute("fill", "none");
-
-            newElement.setAttribute("stroke-width", fastToFixed(map.config.flightPlanNonActiveLegWidth, 0));
-            newElement.setAttribute("stroke-linecap", "square");
-
-            document.getElementById(this.id(map))
-                .appendChild(newElement);
-        }
-    }
-
-    /**
-     * Remove any path elements that exist past the expected number of path elements from the DOM.
-     * @param pathCount {number}
-     */
-    removeTrailingPathElementsAbeam(pathCount) {
-        let i = pathCount;
-        let existingElement = document.getElementById(`flight-plan-abeam-${i}`);
-        while (existingElement) {
-            existingElement.remove();
-            i++;
-            existingElement = document.getElementById(`flight-plan-abeam-${i}`);
         }
     }
 
