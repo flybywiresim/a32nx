@@ -12,7 +12,6 @@ jobs:
     env:
       MASTER_ZIP_NAME: A32NX-master-cfbw.zip
       BUILD_DIR_NAME: vmaster-cfbw
-      CDN_DIR: /flybywiresim/addons/a32nx/cfbw/
     steps:
       - name: Checkout source
         uses: actions/checkout@v2
@@ -29,14 +28,10 @@ jobs:
           mkdir ./${{ env.BUILD_DIR_NAME }}
           zip -r ./${{ env.BUILD_DIR_NAME }}/${{ env.MASTER_ZIP_NAME }} ./A32NX/
       - name: Upload to Bunny CDN
-        uses: sebastianpopp/ftp-action@releases/v2
-        with:
-          host: ${{ secrets.BUNNY_BUCKET_HOST }}
-          user: ${{ secrets.BUNNY_BUCKET_USERNAME }}
-          password: ${{ secrets.BUNNY_BUCKET_PASSWORD }}
-          localDir: ./build-modules/
-          remoteDir: ${{ env.CDN_DIR }}
-          options: "--delete --asci --transfer-all --verbose"
+        env:
+          BUNNY_BUCKET_PASSWORD: ${{ secrets.BUNNY_BUCKET_PASSWORD }}
+          BUNNY_BUCKET_DESTINATION: addons/a32nx/cfbw
+        run: ./scripts/cdn.sh $BUNNY_BUCKET_DESTINATION
       - name: Upload to DigitalOcean CDN
         uses: LibreTexts/do-space-sync-action@master
         with:
